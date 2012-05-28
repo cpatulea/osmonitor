@@ -170,6 +170,19 @@ int misc_tegra3_get_enabled_core_count()
 	return result;
 }
 
+int misc_tegra3_is_lowpower_group_active()
+{
+	char result[BUFFERSIZE];
+	FILE *cpufile = fopen(CPU_TEGRA3_ACTIVE_GROUP, "r");
+	if(cpufile)
+	{
+		fscanf(cpufile, "%s", &result);
+		fclose(cpufile);
+	}
+
+	return strcmp(result, "LP") == 0;
+}
+
 power_info cur_powerinfo;
 
 void misc_dump_power()

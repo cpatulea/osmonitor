@@ -30,6 +30,7 @@
 #define EVENT_TYPE_TEMPERATURE ABS_THROTTLE
 
 #define CPU_TEGRA3_MAX_CORES "/sys/kernel/debug/tegra_hotplug/max_cpus"
+#define CPU_TEGRA3_ACTIVE_GROUP "/sys/kernel/cluster/active"
 
 #define ID_T  (3)
 #define SENSORS_TEMPERATURE    (1<<ID_T)
@@ -52,6 +53,7 @@ int misc_get_processor_omaptemp();
 
 int misc_tegra3_is_tegra3();
 int misc_tegra3_get_enabled_core_count();
+int misc_tegra3_is_lowpower_group_active();
 
 /* Battery Module */
 typedef struct power_proto

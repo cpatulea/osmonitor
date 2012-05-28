@@ -56,6 +56,7 @@ public class JNIInterface
     public native String GetProcessorScalGov(int num);
     
     public native boolean GetTegra3IsTegra3();
+    public native boolean GetTegra3IsLowPowerGroupActive();
     public native int GetTegra3EnabledCoreCount();
     
     /* Memory */

@@ -402,6 +402,11 @@ static jint Tegra3_GetEnabledCoreCount(JNIEnv* env, jobject thiz)
 	return misc_tegra3_get_enabled_core_count();
 }
 
+static jboolean Tegra3_IsLowPowerGroupActive(JNIEnv* env, jobject thiz)
+{
+	return misc_tegra3_is_lowpower_group_active();
+}
+
 static jint Processor_GetOMAPTemp(JNIEnv* env, jobject thiz)
 {
 	return misc_get_processor_omaptemp();
@@ -1051,6 +1056,7 @@ static JNINativeMethod gMethods[] = {
 		/* Tegra 3 */
 		{ "GetTegra3IsTegra3", "()Z", Tegra3_IsTegra3 },
 		{ "GetTegra3EnabledCoreCount", "()I", Tegra3_GetEnabledCoreCount },
+		{ "GetTegra3IsLowPowerGroupActive", "()Z", Tegra3_IsLowPowerGroupActive },
 
 		/* Memory */
 		{ "GetMemTotal", "()J", Mem_GetTotal},

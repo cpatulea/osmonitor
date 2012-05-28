@@ -116,6 +116,9 @@
 <string name="processorcore_text">Core</string>
 
 <string name="tegra3cores_text">Cores active</string>
+<string name="tegra3activegroup_text">Active group</string>
+<string name="tegra3activegroup_generic_text">Generic</string>
+<string name="tegra3activegroup_lowpower_text">Low Power</string>
 
 <!-- Battery -->
 <string name="battery_text">Battery</string>
