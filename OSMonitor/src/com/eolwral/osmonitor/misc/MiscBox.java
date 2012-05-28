@@ -285,9 +285,9 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		    	TextView ActiveGroupBox = (TextView) findViewById(R.id.activeGroupText);
     		    	SetCoresBox.setText(Html.fromHtml(ResourceManager.getText(R.string.tegra3cores_text)
     				    +": <i>"+JNILibrary.GetTegra3EnabledCoreCount()+"</i>"));
-    		    	ActiveGroupBox.setText(Html.fromHtml(ResourceManager.getText(R.string.tegra3activegroup_text)
-        				    +": <i>"+ (JNILibrary.GetTegra3IsLowPowerGroupActive() ?
-        				    	ResourceManager.getText(R.string.tegra3activegroup_lowpower_text) :
+	    		    	ActiveGroupBox.setText(Html.fromHtml(ResourceManager.getText(R.string.tegra3activegroup_text)
+	        				    +": <i>"+ (JNILibrary.GetTegra3IsLowPowerGroupActive() ?
+	        				    	ResourceManager.getText(R.string.tegra3activegroup_lowpower_text) :
         				    	ResourceManager.getText(R.string.tegra3activegroup_generic_text))
         				    +"</i>"));
     		    	

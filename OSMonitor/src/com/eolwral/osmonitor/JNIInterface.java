@@ -58,6 +58,7 @@ public class JNIInterface
     public native boolean GetTegra3IsTegra3();
     public native boolean GetTegra3IsLowPowerGroupActive();
     public native int GetTegra3EnabledCoreCount();
+    public native String GetTegra3ActiveCpuGroup();
     
     /* Memory */
     public native long GetMemTotal();
