@@ -268,7 +268,7 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		   	java.text.DecimalFormat TempFormat = new java.text.DecimalFormat("#.##");
 
     			if(JNILibrary.GetProcessorOMAPTemp() != 0)
-    				m_ProcessorTempStr.append("OMAP3403 "+ResourceManager.getText(R.string.processortmp_text)+"<br />")
+    				m_ProcessorTempStr.append("CPU "+ResourceManager.getText(R.string.processortmp_text)+"<br />")
     		   					      .append("&nbsp;&nbsp;&nbsp;&nbsp<i>"+JNILibrary.GetProcessorOMAPTemp()+"°C")
 		    		  		   	      .append(" ("+TempFormat.format(((double)JNILibrary.GetProcessorOMAPTemp()*9/5+32))+"°F)</i>");
 
