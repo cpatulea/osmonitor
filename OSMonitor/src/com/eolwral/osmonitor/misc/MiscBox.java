@@ -285,14 +285,19 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		    	TextView ActiveGroupBox = (TextView) findViewById(R.id.activeGroupText);
     		    	SetCoresBox.setText(Html.fromHtml(ResourceManager.getText(R.string.tegra3cores_text)
     				    +": <i>"+JNILibrary.GetTegra3EnabledCoreCount()+"</i>"));
+    		    	if (JNILibrary.GetTegra3ActiveCpuGroup() == null)
+    		    		ActiveGroupBox.setVisibility(View.GONE);
+    		    	else
+    		    	{
+    		    		ActiveGroupBox.setVisibility(View.VISIBLE);
 	    		    	ActiveGroupBox.setText(Html.fromHtml(ResourceManager.getText(R.string.tegra3activegroup_text)
 	        				    +": <i>"+ (JNILibrary.GetTegra3IsLowPowerGroupActive() ?
 	        				    	ResourceManager.getText(R.string.tegra3activegroup_lowpower_text) :
-        				    	ResourceManager.getText(R.string.tegra3activegroup_generic_text))
-        				    +"</i>"));
+	        				    	ResourceManager.getText(R.string.tegra3activegroup_generic_text))
+	        				    +"</i> (" + JNILibrary.GetTegra3ActiveCpuGroup() + ")"));
+    		    	}
     		    	
     		    	SetCoresBox.setVisibility(View.VISIBLE);
-    		    	ActiveGroupBox.setVisibility(View.VISIBLE);
     		    	findViewById(R.id.btnCpuCores).setVisibility(View.VISIBLE);
     		    }
     		   	StringBuilder m_DiskStr = new StringBuilder();

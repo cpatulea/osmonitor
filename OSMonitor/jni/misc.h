@@ -54,6 +54,7 @@ int misc_get_processor_omaptemp();
 int misc_tegra3_is_tegra3();
 int misc_tegra3_get_enabled_core_count();
 int misc_tegra3_is_lowpower_group_active();
+int misc_tegra3_get_active_cpu_group(char* result);
 
 /* Battery Module */
 typedef struct power_proto

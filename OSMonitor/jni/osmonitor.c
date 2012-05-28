@@ -407,6 +407,17 @@ static jboolean Tegra3_IsLowPowerGroupActive(JNIEnv* env, jobject thiz)
 	return misc_tegra3_is_lowpower_group_active();
 }
 
+static jstring Tegra3_GetActiveCpuGroup(JNIEnv* env, jobject thiz)
+{
+	char buf[BUFFERSIZE] = { '\0' };
+	if (misc_tegra3_get_active_cpu_group(buf));
+	{
+		return (*env)->NewStringUTF(env, buf);
+	}
+
+	return NULL;
+}
+
 static jint Processor_GetOMAPTemp(JNIEnv* env, jobject thiz)
 {
 	return misc_get_processor_omaptemp();
@@ -1057,6 +1068,7 @@ static JNINativeMethod gMethods[] = {
 		{ "GetTegra3IsTegra3", "()Z", Tegra3_IsTegra3 },
 		{ "GetTegra3EnabledCoreCount", "()I", Tegra3_GetEnabledCoreCount },
 		{ "GetTegra3IsLowPowerGroupActive", "()Z", Tegra3_IsLowPowerGroupActive },
+		{ "GetTegra3ActiveCpuGroup", "()Ljava/lang/String;", Tegra3_GetActiveCpuGroup },
 
 		/* Memory */
 		{ "GetMemTotal", "()J", Mem_GetTotal},
