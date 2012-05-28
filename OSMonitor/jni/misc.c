@@ -88,14 +88,21 @@ void misc_dump_processor()
 
 	// OMAP3430 temperature
 	FILE *cpufile = fopen(OMAP_TEMPERATURE, "r");
-	if(!cpufile)
-		omaptemp = 0;
-	else
+	omaptemp = 0;
+	if(cpufile)
 	{
 		fscanf(cpufile, "%d", &omaptemp);
 		fclose(cpufile);
 	}
 
+	// Tegra 3 temperature
+	cpufile = fopen(TEGRA3_TEMPERATURE, "r");
+	if(cpufile)
+	{
+		fscanf(cpufile, "%d", &omaptemp);
+		fclose(cpufile);
+		omaptemp /= 1000;
+	}
 }
 
 int misc_get_processor_cpumax(int num)

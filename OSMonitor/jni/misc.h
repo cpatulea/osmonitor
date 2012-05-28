@@ -26,6 +26,7 @@
 
 #define AKM_DEVICE_NAME "/dev/akm8976_aot"
 #define OMAP_TEMPERATURE "/sys/class/hwmon/hwmon0/device/temp1_input"
+#define TEGRA3_TEMPERATURE "/sys/kernel/debug/tegra_thermal/temp_tj"
 #define EVENT_TYPE_TEMPERATURE ABS_THROTTLE
 
 #define ID_T  (3)
