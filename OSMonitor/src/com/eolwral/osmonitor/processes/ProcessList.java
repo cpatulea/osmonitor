@@ -535,12 +535,6 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     	uiHandler.removeCallbacks(uiRunnable);
     	JNILibrary.doTaskStop();
     	
-    	if(Freeze.isChecked())
-    	{
-    		Freeze.setChecked(false);
-    		FreezeIt = false;
-    	}
-    	
     	if(MultiSelect.isChecked())
     	{
 			MultiSelect.setChecked(false);
@@ -555,8 +549,9 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     protected void onResume() 
     {    
         restorePrefs();
-
-        JNILibrary.doTaskStart(JNILibrary.doTaskProcess);
+        
+        if(!FreezeIt)
+            JNILibrary.doTaskStart(JNILibrary.doTaskProcess);
     	uiHandler.post(uiRunnable);
     	super.onResume();
     }
