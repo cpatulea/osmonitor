@@ -392,6 +392,16 @@ static jstring Processor_GetScalGov( JNIEnv* env, jobject thiz, jint num)
 	return (*env)->NewStringUTF(env, buf);
 }
 
+static jboolean Tegra3_IsTegra3(JNIEnv* env, jobject thiz)
+{
+	return misc_tegra3_is_tegra3();
+}
+
+static jint Tegra3_GetEnabledCoreCount(JNIEnv* env, jobject thiz)
+{
+	return misc_tegra3_get_enabled_core_count();
+}
+
 static jint Processor_GetOMAPTemp(JNIEnv* env, jobject thiz)
 {
 	return misc_get_processor_omaptemp();
@@ -1037,6 +1047,10 @@ static JNINativeMethod gMethods[] = {
 		{ "GetProcessorScalCur", "(I)I", Processor_GetScalCur },
 		{ "GetProcessorOMAPTemp", "()I", Processor_GetOMAPTemp },
 		{ "GetProcessorScalGov", "(I)Ljava/lang/String;", Processor_GetScalGov },
+
+		/* Tegra 3 */
+		{ "GetTegra3IsTegra3", "()Z", Tegra3_IsTegra3 },
+		{ "GetTegra3EnabledCoreCount", "()I", Tegra3_GetEnabledCoreCount },
 
 		/* Memory */
 		{ "GetMemTotal", "()J", Mem_GetTotal},

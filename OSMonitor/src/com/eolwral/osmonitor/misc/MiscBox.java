@@ -279,6 +279,14 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		   		
     		    ProcessorTempBox.setText(Html.fromHtml(m_ProcessorTempStr.toString()));
 
+    		    if (JNILibrary.GetTegra3IsTegra3())
+    		    {
+    		    	TextView SetCoresBox = (TextView) findViewById(R.id.setCpuCores);
+    		    	
+    		    	SetCoresBox.setText(Html.fromHtml(ResourceManager.getText(R.string.tegra3cores_text)
+    				    +": <i>"+JNILibrary.GetTegra3EnabledCoreCount()+"</i>"));
+    		    }
+    		    
     		   	StringBuilder m_DiskStr = new StringBuilder();
 	
 				java.text.DecimalFormat DiskFormat = new java.text.DecimalFormat(",###");
@@ -515,6 +523,39 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
                 );
                 
                 AlertDialog SetCPUMax = SetCPUMaxBox.create();
+                SetCPUMax.show();
+            }
+        });
+        
+        ImageButton MaxCores = (ImageButton) findViewById(R.id.btnCpuCores);
+        
+        MaxCores.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+            	AlertDialog.Builder SetCoresMaxBox = new AlertDialog.Builder(MiscBox.this);
+            	
+            	int maxCores = 4;
+            	String[] cores = new String[maxCores];
+            	for (int i = 0; i < maxCores; ++i)
+            		cores[i] = Integer.toString(i + 1);
+            	SetCoresMaxBox.setSingleChoiceItems(cores, JNIInterface.getInstance().GetTegra3EnabledCoreCount() - 1, new DialogInterface.OnClickListener() 
+                	{
+                    	public void onClick(DialogInterface dialog, int item) 
+                    	{
+                        	if(!Rooted)
+                        	{
+                        		dialog.dismiss();
+                        		return;
+                        	}
+
+                    		String SetCoresCmd = "echo "+Integer.toString(item + 1)+
+                    				" > /sys/kernel/debug/tegra_hotplug/max_cpus"+"\n";
+                    		CommonUtil.execCommand(SetCoresCmd);
+                    		dialog.dismiss();
+                    	}
+                	}
+                );
+                
+                AlertDialog SetCPUMax = SetCoresMaxBox.create();
                 SetCPUMax.show();
             }
         });

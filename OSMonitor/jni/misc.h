@@ -29,6 +29,8 @@
 #define TEGRA3_TEMPERATURE "/sys/kernel/debug/tegra_thermal/temp_tj"
 #define EVENT_TYPE_TEMPERATURE ABS_THROTTLE
 
+#define CPU_TEGRA3_MAX_CORES "/sys/kernel/debug/tegra_hotplug/max_cpus"
+
 #define ID_T  (3)
 #define SENSORS_TEMPERATURE    (1<<ID_T)
 
@@ -47,6 +49,9 @@ int misc_get_processor_scalmin(int num);
 void misc_get_processor_scalgov(int num, char* buf);
 int misc_get_processor_number();
 int misc_get_processor_omaptemp();
+
+int misc_tegra3_is_tegra3();
+int misc_tegra3_get_enabled_core_count();
 
 /* Battery Module */
 typedef struct power_proto

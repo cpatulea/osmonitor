@@ -98,6 +98,19 @@
 							  android:layout_height="wrap_content"
 							  android:layout_span="5" />
 				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+						  android:layout_height="wrap_content">
+					<TextView android:id="@+id/setCpuCores"
+							  android:layout_width="wrap_content"
+							  android:layout_height="wrap_content"
+							  android:layout_span="4" />
+					<ImageButton android:id="@+id/btnCpuCores"
+    							 android:layout_height="20dip"
+    							 android:layout_width="20dip"
+    							 android:src="@drawable/dshow"
+    							 android:padding="2dip" 
+    							 android:background="@drawable/empty"/>
+				</TableRow>
 			</TableLayout> 
 		</TableRow>
 		

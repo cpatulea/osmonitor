@@ -146,6 +146,30 @@ int misc_get_processor_omaptemp()
 	return omaptemp;
 }
 
+int misc_tegra3_is_tegra3()
+{
+	FILE *cpufile = fopen(TEGRA3_TEMPERATURE, "r");
+	if(cpufile)
+	{
+		fclose(cpufile);
+		return 1;
+	}
+	return 0;
+}
+
+int misc_tegra3_get_enabled_core_count()
+{
+	int result = 0;
+	FILE *cpufile = fopen(CPU_TEGRA3_MAX_CORES, "r");
+	if(cpufile)
+	{
+		fscanf(cpufile, "%d", &result);
+		fclose(cpufile);
+	}
+
+	return result;
+}
+
 power_info cur_powerinfo;
 
 void misc_dump_power()

@@ -54,7 +54,10 @@ public class JNIInterface
     public native int GetProcessorScalCur(int num);
     public native int GetProcessorOMAPTemp();
     public native String GetProcessorScalGov(int num);
-       
+    
+    public native boolean GetTegra3IsTegra3();
+    public native int GetTegra3EnabledCoreCount();
+    
     /* Memory */
     public native long GetMemTotal();
     public native long GetMemFree();

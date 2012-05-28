@@ -115,6 +115,8 @@
 <string name="processorcur_text">Current</string>
 <string name="processorcore_text">Core</string>
 
+<string name="tegra3cores_text">Cores active</string>
+
 <!-- Battery -->
 <string name="battery_text">Battery</string>
 <string name="battery_health_text">Health</string>
