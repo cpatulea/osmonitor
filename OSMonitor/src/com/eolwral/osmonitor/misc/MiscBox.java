@@ -279,11 +279,10 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		   		
     		    ProcessorTempBox.setText(Html.fromHtml(m_ProcessorTempStr.toString()));
 
+    		    TextView SetCoresBox = (TextView) findViewById(R.id.setCpuCores);
+		    	TextView ActiveGroupBox = (TextView) findViewById(R.id.activeGroupText);
     		    if (JNILibrary.GetTegra3IsTegra3())
     		    {
-    		    	TextView SetCoresBox = (TextView) findViewById(R.id.setCpuCores);
-    		    	TextView ActiveGroupBox = (TextView) findViewById(R.id.activeGroupText);
-    		    	
     		    	SetCoresBox.setText(Html.fromHtml(ResourceManager.getText(R.string.tegra3cores_text)
     				    +": <i>"+JNILibrary.GetTegra3EnabledCoreCount()+"</i>"));
     		    	ActiveGroupBox.setText(Html.fromHtml(ResourceManager.getText(R.string.tegra3activegroup_text)
@@ -292,7 +291,11 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
         				    	ResourceManager.getText(R.string.tegra3activegroup_generic_text))
         				    +"</i>"));
     		    }
-    		    
+    		    else
+    		    {
+    		    	SetCoresBox.setVisibility(View.GONE);
+    		    	ActiveGroupBox.setVisibility(View.GONE);
+    		    }
     		   	StringBuilder m_DiskStr = new StringBuilder();
 	
 				java.text.DecimalFormat DiskFormat = new java.text.DecimalFormat(",###");
