@@ -172,15 +172,22 @@ int misc_tegra3_get_enabled_core_count()
 
 int misc_tegra3_is_lowpower_group_active()
 {
-	char result[BUFFERSIZE];
+	char result[BUFFERSIZE] = { '\0' };	
+	
+	return misc_tegra3_get_active_cpu_group(result) && strcmp(result, "LP") == 0;
+}
+
+int misc_tegra3_get_active_cpu_group(char* result)
+{
 	FILE *cpufile = fopen(CPU_TEGRA3_ACTIVE_GROUP, "r");
 	if(cpufile)
 	{
-		fscanf(cpufile, "%s", &result);
+		fscanf(cpufile, "%s", result);
 		fclose(cpufile);
+		return 1;
 	}
 
-	return strcmp(result, "LP") == 0;
+	return 0;
 }
 
 power_info cur_powerinfo;
