@@ -418,9 +418,9 @@ static jstring Tegra3_GetActiveCpuGroup(JNIEnv* env, jobject thiz)
 	return NULL;
 }
 
-static jint Processor_GetOMAPTemp(JNIEnv* env, jobject thiz)
+static jfloat Processor_GetCPUTemp(JNIEnv* env, jobject thiz)
 {
-	return misc_get_processor_omaptemp();
+	return misc_get_processor_cputemp();
 }
 
 static jint Power_GetCapacity(JNIEnv* env, jobject thiz)
@@ -1061,7 +1061,7 @@ static JNINativeMethod gMethods[] = {
 		{ "GetProcessorScalMax", "(I)I", Processor_GetScalMax },
 		{ "GetProcessorScalMin", "(I)I", Processor_GetScalMin },
 		{ "GetProcessorScalCur", "(I)I", Processor_GetScalCur },
-		{ "GetProcessorOMAPTemp", "()I", Processor_GetOMAPTemp },
+		{ "GetProcessorCPUTemp", "()F", Processor_GetCPUTemp },
 		{ "GetProcessorScalGov", "(I)Ljava/lang/String;", Processor_GetScalGov },
 
 		/* Tegra 3 */

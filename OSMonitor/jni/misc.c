@@ -1,7 +1,7 @@
 #include "misc.h"
 
 processor_info cur_processor[8];
-unsigned int omaptemp = 0;
+float cputemp = 0;
 int cur_processor_num = 0;
 
 void misc_dump_processor()
@@ -88,20 +88,23 @@ void misc_dump_processor()
 
 	// OMAP3430 temperature
 	FILE *cpufile = fopen(OMAP_TEMPERATURE, "r");
-	omaptemp = 0;
+	cputemp = 0.f;
 	if(cpufile)
 	{
+		unsigned int omaptemp = 0;
 		fscanf(cpufile, "%d", &omaptemp);
 		fclose(cpufile);
+		cputemp = omaptemp;
 	}
 
 	// Tegra 3 temperature
 	cpufile = fopen(TEGRA3_TEMPERATURE, "r");
 	if(cpufile)
 	{
-		fscanf(cpufile, "%d", &omaptemp);
+		unsigned int rawtemp = 0;
+		fscanf(cpufile, "%d", &rawtemp);
 		fclose(cpufile);
-		omaptemp /= 1000;
+		cputemp = rawtemp / 1000.;
 	}
 }
 
@@ -141,9 +144,9 @@ int misc_get_processor_number()
 	return cur_processor_num;
 }
 
-int misc_get_processor_omaptemp()
+float misc_get_processor_cputemp()
 {
-	return omaptemp;
+	return cputemp;
 }
 
 int misc_tegra3_is_tegra3()

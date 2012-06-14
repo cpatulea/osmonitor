@@ -266,10 +266,10 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		   	StringBuilder m_ProcessorTempStr = new StringBuilder();
     		   	java.text.DecimalFormat TempFormat = new java.text.DecimalFormat("#.##");
 
-    			if(JNILibrary.GetProcessorOMAPTemp() != 0)
+    			if(JNILibrary.GetProcessorCPUTemp() != 0)
     				m_ProcessorTempStr.append("CPU "+ResourceManager.getText(R.string.processortmp_text)+"<br />")
-    		   					      .append("&nbsp;&nbsp;&nbsp;&nbsp<i>"+JNILibrary.GetProcessorOMAPTemp()+"°C")
-		    		  		   	      .append(" ("+TempFormat.format(((double)JNILibrary.GetProcessorOMAPTemp()*9/5+32))+"°F)</i>");
+    		   					      .append("&nbsp;&nbsp;&nbsp;&nbsp<i>"+JNILibrary.GetProcessorCPUTemp()+"°C")
+		    		  		   	      .append(" ("+TempFormat.format(((double)JNILibrary.GetProcessorCPUTemp()*9/5+32))+"°F)</i>");
 
     		    if(SensorTemp != 0)
     		    	m_ProcessorTempStr.append("<br />"+SensorName+"<br />")

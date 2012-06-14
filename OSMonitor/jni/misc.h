@@ -49,7 +49,7 @@ int misc_get_processor_scalmax(int num);
 int misc_get_processor_scalmin(int num);
 void misc_get_processor_scalgov(int num, char* buf);
 int misc_get_processor_number();
-int misc_get_processor_omaptemp();
+float misc_get_processor_cputemp();
 
 int misc_tegra3_is_tegra3();
 int misc_tegra3_get_enabled_core_count();

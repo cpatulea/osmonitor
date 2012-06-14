@@ -52,7 +52,7 @@ public class JNIInterface
     public native int GetProcessorScalMax(int num);
     public native int GetProcessorScalMin(int num);
     public native int GetProcessorScalCur(int num);
-    public native int GetProcessorOMAPTemp();
+    public native float GetProcessorCPUTemp();
     public native String GetProcessorScalGov(int num);
     
     public native boolean GetTegra3IsTegra3();
