@@ -245,11 +245,11 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		   		if (i != 0)
     		   			m_ProcessorStr.append(" / ");
 	    		   	if(JNILibrary.GetProcessorScalCur(i) > PreCPUFreq[i])
-	    		   		m_ProcessorStr.append("<font color=red>"+JNILibrary.GetProcessorScalCur(0)+"</font>");
+	    		   		m_ProcessorStr.append("<font color=red>"+JNILibrary.GetProcessorScalCur(i)+"</font>");
 	    		   	else if (JNILibrary.GetProcessorScalCur(i) < PreCPUFreq[i])
-	    		   		m_ProcessorStr.append("<font color=green>"+JNILibrary.GetProcessorScalCur(0)+"</font>");
+	    		   		m_ProcessorStr.append("<font color=green>"+JNILibrary.GetProcessorScalCur(i)+"</font>");
 	    		   	else
-	        		   	m_ProcessorStr.append(JNILibrary.GetProcessorScalCur(0));
+	        		   	m_ProcessorStr.append(JNILibrary.GetProcessorScalCur(i));
 	    		   	PreCPUFreq[i] = JNILibrary.GetProcessorScalCur(i);
     		   	}
     		   	for (int i = activeCores; i < PreCPUFreq.length; ++i)
