@@ -40,7 +40,7 @@
 <string name="process_nice">Nice Process</string>
 
 <!-- Expanded Menu  -->
-<string name="process_killmsg">Kill $COUNT$ Process..</string>
+<string name="process_killmsg">Kill $COUNT$ Process&#8230;</string>
 <string name="process_multiselect">MultiSelect</string>
 <string name="process_multikill">Kill</string>
 <string name="process_freeze">Freeze</string>
@@ -228,8 +228,8 @@
 <string name="button_ok">OK</string>
 <string name="button_cancel">Cancel</string>
 <string name="button_close">Close</string>
-<string name="message_loading">Loading..</string>
-<string name="message_waiting">Please wait...</string>
+<string name="message_loading">Loading&#8230;</string>
+<string name="message_waiting">Please wait&#8230;</string>
 
 <!-- Export -->
 <string name="common_exportfile_title">Input File Name</string>
