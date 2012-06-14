@@ -60,7 +60,7 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
 {
 	private JNIInterface JNILibrary = JNIInterface.getInstance();;
 	
-	private long PreCPUFreq = 0;
+	private long[] PreCPUFreq = new long[8];
 	private String SensorName = "";
 	private float SensorTemp = 0;
 	
@@ -237,28 +237,27 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
 //    		   	m_ProcessorStr.append(ResourceManager.getText(R.string.processorgov_text))
   //  		   				  .append(": <i>"+JNILibrary.GetProcessorScalGov()+"</i><br />");
     		   	
-    		   	if(JNILibrary.GetProcessorScalCur(0) > PreCPUFreq)
+    		   	m_ProcessorStr.append(ResourceManager.getText(R.string.processorcur_text))
+    		   	              .append(": ");
+    		   	int activeCores = JNILibrary.GetProcessorNum();
+    		   	for (int i = 0; i < activeCores; ++i)
     		   	{
-        		   	m_ProcessorStr.append(ResourceManager.getText(R.string.processorcur_text))
-	   				  			  .append(": <font color=red>"+JNILibrary.GetProcessorScalCur(0)+"</font><br />");
+    		   		if (i != 0)
+    		   			m_ProcessorStr.append(" / ");
+	    		   	if(JNILibrary.GetProcessorScalCur(i) > PreCPUFreq[i])
+	    		   		m_ProcessorStr.append("<font color=red>"+JNILibrary.GetProcessorScalCur(0)+"</font>");
+	    		   	else if (JNILibrary.GetProcessorScalCur(i) < PreCPUFreq[i])
+	    		   		m_ProcessorStr.append("<font color=green>"+JNILibrary.GetProcessorScalCur(0)+"</font>");
+	    		   	else
+	        		   	m_ProcessorStr.append(JNILibrary.GetProcessorScalCur(0));
+	    		   	PreCPUFreq[i] = JNILibrary.GetProcessorScalCur(i);
     		   	}
-    		   	else if (JNILibrary.GetProcessorScalCur(0) < PreCPUFreq)
-    		   	{
-    		   		m_ProcessorStr.append(ResourceManager.getText(R.string.processorcur_text))
-    		   					  .append(": <font color=green>"+JNILibrary.GetProcessorScalCur(0)+"</font><br />");
-    		   	}
-    		   	else
-    		   	{
-        		   	m_ProcessorStr.append(ResourceManager.getText(R.string.processorcur_text))
-			  			  .append(": "+JNILibrary.GetProcessorScalCur(0)+"<br />");
-    		   	}
+    		   	for (int i = activeCores; i < PreCPUFreq.length; ++i)
+    		   		PreCPUFreq[i] = 0;
+    		   	m_ProcessorStr.append("<br />")
+    		   	              .append(ResourceManager.getText(R.string.processorcore_text))
+    		   	              .append(": "+activeCores);
     		   	
-    		   	m_ProcessorStr.append(ResourceManager.getText(R.string.processorcore_text))
-    		   				  .append(": "+JNILibrary.GetProcessorNum());
-    		   	
-    		   	
-    		   	PreCPUFreq = JNILibrary.GetProcessorScalCur(0);
-
     		   	if(JNILibrary.GetProcessorScalMin(0) != 0)
     		   		ProcessorBox.setText(Html.fromHtml(m_ProcessorStr.toString()));
     		   	else
@@ -294,7 +293,7 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
 	        				    +": <i>"+ (JNILibrary.GetTegra3IsLowPowerGroupActive() ?
 	        				    	ResourceManager.getText(R.string.tegra3activegroup_lowpower_text) :
 	        				    	ResourceManager.getText(R.string.tegra3activegroup_generic_text))
-	        				    +"</i> (" + JNILibrary.GetTegra3ActiveCpuGroup() + ")"));
+	        				    +"</i>"));
     		    	}
     		    	
     		    	SetCoresBox.setVisibility(View.VISIBLE);
