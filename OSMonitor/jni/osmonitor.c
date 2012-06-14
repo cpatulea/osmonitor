@@ -410,7 +410,7 @@ static jboolean Tegra3_IsLowPowerGroupActive(JNIEnv* env, jobject thiz)
 static jstring Tegra3_GetActiveCpuGroup(JNIEnv* env, jobject thiz)
 {
 	char buf[BUFFERSIZE] = { '\0' };
-	if (misc_tegra3_get_active_cpu_group(buf));
+	if (misc_tegra3_get_active_cpu_group(buf))
 	{
 		return (*env)->NewStringUTF(env, buf);
 	}
