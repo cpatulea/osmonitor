@@ -23,10 +23,12 @@ import com.eolwral.osmonitor.R;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 
 public class Preferences extends PreferenceActivity {
@@ -76,10 +78,15 @@ public class Preferences extends PreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
    		Settings = PreferenceManager.getDefaultSharedPreferences(this);
    		
+   		EditTextPreference UpdateInterval = (EditTextPreference)findPreference(PREF_UPDATE);
         Preference AutoStart = (Preference)findPreference(PREF_AUTOSTART);
         Preference AppBar = (Preference)findPreference(PREF_HIDEAPPBAR);
     	Preference Rooted = (Preference)findPreference(PREF_ROOTED);
         
+    	//Set the type of our Update Interval value
+    	UpdateInterval.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER |
+    			InputType.TYPE_NUMBER_VARIATION_NORMAL);
+    	
     	//Disable auto start if we are stored on external storage (may not be mounted)
        	if(CommonUtil.checkExtraStore(this))
    			AutoStart.setEnabled(false);
