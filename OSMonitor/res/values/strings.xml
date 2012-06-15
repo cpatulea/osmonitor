@@ -165,24 +165,25 @@
 <!-- Preferences -->
 
 <!-- Global -->
-<string name="pref_updatetime_title">Update Interval (Seconds)</string>
-<string name="pref_updatetimesum_title">refresh interval for all</string>
+<string name="pref_updatetime_title">Refresh Interval</string>
+<string name="pref_updatetimesum_title">Delay in seconds between refreshes</string>
 
 <!-- Status Bar  -->
 <string name="pref_showiconbar_title">Show Notification Icon</string>
 <string name="pref_iconbarcolor_title">Notification Icon Color</string>
-<string name="pref_showiconbarsum_title">show a shortcut icon in notification area </string>
+<string name="pref_showiconbarsum_title">Show a notification area icon</string>
 <string name="pref_cpuusage_text">Show CPU Usage</string>
-<string name="pref_cpuusagesum_text">show an animated CPU meter icon in notification area</string>
-<string name="pref_tempvalue_text">Show Celsius</string>
-<string name="pref_tempvaluesum_text">toggle Celsius/Fahrenheit units</string>
-<string name="pref_autostart_text">Autostart</string>
-<string name="pref_autostartsum_text">autostart applications on bootup</string>
+<string name="pref_cpuusagesum_text">Show a CPU meter icon in notification area displaying CPU usage</string>
+<string name="pref_tempvalue_text">Use Metric Units</string>
+<string name="pref_tempvaluesum_text">Display temperature readings in Metric units</string>
+<string name="pref_autostart_text">Start on Boot</string>
+<string name="pref_autostartsum_text">Automatically launch OS Monitor on boot</string>
 
 <!-- Extra  -->
 <string name="pref_hideappbar_text">Hide Application Title</string>
-<string name="pref_hideappbarsum_text">more screen space to display</string>
-<string name="pref_rooted_text">Enable ROOT MODE</string>
+<string name="pref_hideappbarsum_text">Hides the Application Title Bar for a larger viewing area</string>
+<string name="pref_rooted_text">Enable Root features</string>
+<string name="pref_rootedsum_text">Enable features requiring root access</string>
 
 
 <!-- Process -->
@@ -196,7 +197,6 @@
 <string name="pref_longclicktitle_text">Long Click Behavior</string>
 <string name="pref_shortclicktitle_text">Short Click Behavior</string>
 <string name="pref_clicktitlesum_text">Show Detail, Action Menu, Right Detail/Left Action</string>
-<string name="pref_rootedsum_text">support kill system process and set CPU frequency</string>
 <string name="pref_hidemultiselect_text">Hide Extra Area</string>
 <string name="pref_hidemultiselectsum_text">hide multiselect and freeze option</string>
 
@@ -232,7 +232,7 @@
 <string name="message_waiting">Please wait&#8230;</string>
 
 <!-- Export -->
-<string name="common_exportfile_title">Input File Name</string>
+<string name="common_exportfile_title">Input File Name (relative to /sdcard)</string>
 <string name="common_exportexist_title">File already exist!</string>
 <string name="common_exportdone_title">Export OK!</string>
 
