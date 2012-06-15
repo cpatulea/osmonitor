@@ -39,7 +39,6 @@
 	
 	<CheckBoxPreference android:title="@string/pref_tempvalue_text" 
 	                    android:summary="@string/pref_tempvaluesum_text" 
-	                    android:dependency="AutoStart_Preference" 
 	                    android:defaultValue="true" 
 	                    android:key="Temperature_Preference">
 	</CheckBoxPreference>
