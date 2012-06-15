@@ -1,5 +1,8 @@
 #include "misc.h"
 
+#include <android/log.h>
+#define LOGCAT(...) __android_log_print(ANDROID_LOG_DEBUG , "android-os-monitor", __VA_ARGS__)
+
 processor_info cur_processor[8];
 float cputemp = 0;
 int cur_processor_num = 0;
@@ -97,14 +100,20 @@ void misc_dump_processor()
 		cputemp = omaptemp;
 	}
 
-	// Tegra 3 temperature
-	cpufile = fopen(TEGRA3_TEMPERATURE, "r");
-	if(cpufile)
+	// Tegra 3 SMBus temperature
+	cputemp = misc_tegra3_get_processor_temperature();
+
+	// Tegra 3 diode temperature
+	if(cputemp == 0.0f)
 	{
-		unsigned int rawtemp = 0;
-		fscanf(cpufile, "%d", &rawtemp);
-		fclose(cpufile);
-		cputemp = rawtemp / 1000.;
+		cpufile = fopen(TEGRA3_TEMPERATURE, "r");
+		if (cpufile)
+		{
+			unsigned int rawtemp = 0;
+			fscanf(cpufile, "%d", &rawtemp);
+			fclose(cpufile);
+			cputemp = rawtemp / 1000.;
+		}
 	}
 }
 
@@ -191,6 +200,66 @@ int misc_tegra3_get_active_cpu_group(char* result)
 	}
 
 	return 0;
+}
+
+/* defines from drivers/misc/nct1008.c */
+#define EXTENDED_RANGE_OFFSET	64U
+#define STANDARD_RANGE_MAX		127U
+#define EXTENDED_RANGE_MAX		(150U + EXTENDED_RANGE_OFFSET)
+static inline char nct1008_value_to_temperature(_Bool extended, unsigned char value)
+{
+	return extended ? (char)(value - EXTENDED_RANGE_OFFSET) : (char)value;
+}
+
+float misc_tegra3_get_processor_temperature()
+{
+	FILE *cpufile = fopen(CPU_TEGRA3_SMBUS_TEMPERATURE, "r");
+	int tempValueHigh = -1,
+	    tempValueLow = -1;
+
+	if (cpufile)
+	{
+		int reg, value, read;
+		char buffer[256];
+		while (!feof(cpufile))
+		{
+			/* Read the line from the file, stripping the Register name */
+			char* valueStr = NULL;
+			memset(buffer, 0, sizeof(buffer));
+			fgets(buffer, sizeof(buffer), cpufile);
+			if ((valueStr = strstr(buffer, "Addr ")) == NULL)
+				continue;
+
+			/* Then sscanf the remainder of the string */
+			read = sscanf(valueStr, "Addr = %*i Reg %i Value %i", &reg, &value);
+			if (read != 2)
+				continue;
+
+			if (reg == 0x0)
+				tempValueLow = value;
+			else if (reg == 0x1)
+				tempValueHigh = value;
+		}
+		fclose(cpufile);
+	}
+
+	if (tempValueHigh != -1 && tempValueLow != -1)
+	{
+		/* Based off nct1008_polling_func in nct1008.c */
+		float result;
+		tempValueLow >>= 6;
+		tempValueLow *= 25;
+		tempValueHigh = nct1008_value_to_temperature(1 /* for endeavouru: /arch/arm/mach-tegra/board-endeavoru-sensors.c */,
+			tempValueHigh);
+
+		result = tempValueLow;
+		while (result > 1.0f)
+			result /= 10.0f;
+		result += tempValueHigh;
+		return result;
+	}
+
+	return 0.0f;
 }
 
 power_info cur_powerinfo;

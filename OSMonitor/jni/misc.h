@@ -31,6 +31,7 @@
 
 #define CPU_TEGRA3_MAX_CORES "/sys/kernel/debug/tegra_hotplug/max_cpus"
 #define CPU_TEGRA3_ACTIVE_GROUP "/sys/kernel/cluster/active"
+#define CPU_TEGRA3_SMBUS_TEMPERATURE "/sys/kernel/debug/nct1008"
 
 #define ID_T  (3)
 #define SENSORS_TEMPERATURE    (1<<ID_T)
@@ -55,6 +56,7 @@ int misc_tegra3_is_tegra3();
 int misc_tegra3_get_enabled_core_count();
 int misc_tegra3_is_lowpower_group_active();
 int misc_tegra3_get_active_cpu_group(char* result);
+float misc_tegra3_get_processor_temperature();
 
 /* Battery Module */
 typedef struct power_proto
