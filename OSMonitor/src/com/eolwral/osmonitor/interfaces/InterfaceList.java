@@ -163,7 +163,6 @@ public class InterfaceList extends Activity implements OnGestureListener, OnTouc
     
     public boolean onCreateOptionsMenu(Menu optionMenu) 
     {
-     	super.onCreateOptionsMenu(optionMenu);
      	optionMenu.add(0, 1, 0, getResources().getString(R.string.menu_options));
        	optionMenu.add(0, 5, 0, getResources().getString(R.string.menu_forceexit));
         

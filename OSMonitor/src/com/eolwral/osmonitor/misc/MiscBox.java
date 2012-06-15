@@ -595,7 +595,6 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
 	
     public boolean onCreateOptionsMenu(Menu optionMenu) 
     {
-     	super.onCreateOptionsMenu(optionMenu);
      	optionMenu.add(0, 1, 0, getResources().getString(R.string.menu_options));
        	optionMenu.add(0, 4, 0, getResources().getString(R.string.menu_help));
        	optionMenu.add(0, 5, 0, getResources().getString(R.string.menu_forceexit));

@@ -325,7 +325,6 @@ public class NetworkList extends MapActivity implements OnGestureListener, OnTou
     
     public boolean onCreateOptionsMenu(Menu optionMenu) 
     {
-     	super.onCreateOptionsMenu(optionMenu);
      	optionMenu.add(0, 1, 0, getResources().getString(R.string.menu_options));
      	optionMenu.add(0, 2, 0, getResources().getString(R.string.menu_logexport));
        	optionMenu.add(0, 4, 0, getResources().getString(R.string.menu_help));

@@ -213,8 +213,6 @@ public class DebugBox extends Activity implements OnGestureListener, OnTouchList
    
     public boolean onCreateOptionsMenu(Menu optionMenu) 
     {
-     	super.onCreateOptionsMenu(optionMenu);
-     	
      	if(targetPID == 0)
          	optionMenu.add(0, 1, 0, getResources().getString(R.string.menu_options));
 

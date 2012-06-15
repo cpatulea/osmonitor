@@ -15,11 +15,16 @@
  */
 package com.eolwral.osmonitor;
 
+import android.app.Activity;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.TabHost;
 
@@ -32,16 +37,19 @@ import com.eolwral.osmonitor.processes.*;
 
 public class OSMonitor extends TabActivity
 {
+	private TabHost mTabHost;
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
  
     	// load settings
    		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-   		
-   		if(settings.getBoolean(Preferences.PREF_HIDEAPPBAR, true))
+
+   		boolean PriorGingerbread = Build.VERSION.RELEASE.startsWith("1") || Build.VERSION.RELEASE.startsWith("2");
+   		if(PriorGingerbread && settings.getBoolean(Preferences.PREF_HIDEAPPBAR, true))
    	        requestWindowFeature(Window.FEATURE_NO_TITLE);
-   			
+
         if(settings.getBoolean(Preferences.PREF_STATUSBAR, false))
         	if(OSMonitorService.getInstance() == null)
         		startService(new Intent(this, OSMonitorService.class));
@@ -58,7 +66,7 @@ public class OSMonitor extends TabActivity
         
          
         // create tab
-        TabHost mTabHost = getTabHost();
+        mTabHost = getTabHost();
                  
         mTabHost.addTab(mTabHost.newTabSpec("ProcessTab")
                 .setIndicator(getResources().getText(R.string.process_tab), getResources().getDrawable(R.drawable.process))
@@ -80,4 +88,33 @@ public class OSMonitor extends TabActivity
                 .setIndicator(getResources().getText(R.string.debug_tab), getResources().getDrawable(R.drawable.debug))
                 .setContent(new Intent(this, DebugBox.class)));
     }
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+    	menu.add("");
+		return true;
+	}
+    
+    @Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		Activity activity = getCurrentActivity();
+		
+		if (activity != null) {
+			return activity.onMenuItemSelected(featureId, item);
+		} else {
+			return super.onMenuItemSelected(featureId, item);
+		}
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		Activity activity = (Activity)getCurrentActivity();
+		
+		if (activity != null) {
+			return activity.onCreateOptionsMenu(menu);
+		}
+		
+		return false;
+	}
 }
