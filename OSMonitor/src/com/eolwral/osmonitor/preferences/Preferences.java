@@ -66,20 +66,17 @@ public class Preferences extends PreferenceActivity {
 	public static final String PREF_SLOWADAPTER = "SlowAdapter_Preference";
 	public static final String PREF_ALGORITHM = "SortAlgorithm_Preference";
 
-	private Preferences PrefSelf = null;
 	private SharedPreferences Settings = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Load the preferences from an XML resource
+        //Load the preferences from the XML resource
         addPreferencesFromResource(R.xml.preferences);
-        
-        PrefSelf = this;
    		Settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-        // Hide the option to hide the app bar if we are on Honeycomb or later
+        //Hide the option to hide the app bar if we are on Honeycomb or later
    		if (!Build.VERSION.RELEASE.startsWith("1") && !Build.VERSION.RELEASE.startsWith("2"))
    		{
    			Preference AppBar = (Preference)findPreference(PREF_HIDEAPPBAR);
@@ -89,32 +86,30 @@ public class Preferences extends PreferenceActivity {
         Preference AutoStart = (Preference)findPreference(PREF_AUTOSTART);
     	Preference Rooted = (Preference)findPreference(PREF_ROOTED);
         
+    	//Disable autostart if we are stored on external storage (may not be mounted)
        	if(CommonUtil.checkExtraStore(this))
    			AutoStart.setEnabled(false);
         
-    	// check rooted
-        if( JNILibrary.GetRooted() == 1)
-        	Rooted.setEnabled(true);
-        else
-        	Rooted.setEnabled(false);
+    	//Check if we are can run as root
+        Rooted.setEnabled(JNILibrary.GetRooted() != 0);
         
-        // check SetCPU 
-        AutoStart.setOnPreferenceChangeListener( new OnPreferenceChangeListener ()
+        final Preferences thisPref = this;
+        AutoStart.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
         {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue)
 			{
-				if( newValue.equals(true) &&
-		        		Settings.getBoolean(PREF_ROOTED, false) == true)
-					PrefSelf.findPreference(PREF_AUTOSETCPU).setEnabled(true);
+				//Disable modification of CPU settings if we are not going to run as root
+				if (newValue.equals(true) && Settings.getBoolean(PREF_ROOTED, false))
+					thisPref.findPreference(PREF_AUTOSETCPU).setEnabled(true);
 				else
-					PrefSelf.findPreference(PREF_AUTOSETCPU).setEnabled(false);
+					thisPref.findPreference(PREF_AUTOSETCPU).setEnabled(false);
 				
 				return true;
 			}
         });
 
-        Rooted.setOnPreferenceChangeListener( new OnPreferenceChangeListener ()
+        Rooted.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
         {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue)
@@ -122,20 +117,20 @@ public class Preferences extends PreferenceActivity {
 				if(newValue.equals(true))
 					CommonUtil.CheckNice(getAssets());
 
-				if(Settings.getBoolean(PREF_AUTOSTART, false) == true &&
-						newValue.equals(true))
-				{
-					PrefSelf.findPreference(PREF_AUTOSETCPU).setEnabled(true);
-				}
+				//Disable modification of CPU settings if we are not going to run as root
+				if (Settings.getBoolean(PREF_AUTOSTART, false) && newValue.equals(true))
+					thisPref.findPreference(PREF_AUTOSETCPU).setEnabled(true);
 				else
-					PrefSelf.findPreference(PREF_AUTOSETCPU).setEnabled(false);
+					thisPref.findPreference(PREF_AUTOSETCPU).setEnabled(false);
 				
 				return true;
 			}
         });
 
-        if(Settings.getBoolean(PREF_AUTOSTART, false) == true &&
-        		Settings.getBoolean(PREF_ROOTED, false) == true)
+        //Enable modification of CPU settings only if we are starting at boot and if we are
+        //running as root.
+        if (Settings.getBoolean(PREF_AUTOSTART, false) &&
+        	Settings.getBoolean(PREF_ROOTED, false))
         	findPreference(PREF_AUTOSETCPU).setEnabled(true);
         else
         	findPreference(PREF_AUTOSETCPU).setEnabled(false);
