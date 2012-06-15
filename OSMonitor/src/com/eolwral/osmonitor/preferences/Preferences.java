@@ -21,11 +21,13 @@ import com.eolwral.osmonitor.JNIInterface;
 import com.eolwral.osmonitor.R;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.text.method.HideReturnsTransformationMethod;
 
 public class Preferences extends PreferenceActivity {
 
@@ -77,7 +79,13 @@ public class Preferences extends PreferenceActivity {
         PrefSelf = this;
    		Settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-        
+        // Hide the option to hide the app bar if we are on Honeycomb or later
+   		if (!Build.VERSION.RELEASE.startsWith("1") && !Build.VERSION.RELEASE.startsWith("2"))
+   		{
+   			Preference AppBar = (Preference)findPreference(PREF_HIDEAPPBAR);
+   			AppBar.setEnabled(false);
+   		}
+   		
         Preference AutoStart = (Preference)findPreference(PREF_AUTOSTART);
     	Preference Rooted = (Preference)findPreference(PREF_ROOTED);
         
