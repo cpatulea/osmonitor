@@ -75,21 +75,19 @@ public class Preferences extends PreferenceActivity {
         //Load the preferences from the XML resource
         addPreferencesFromResource(R.xml.preferences);
    		Settings = PreferenceManager.getDefaultSharedPreferences(this);
-
-        //Hide the option to hide the app bar if we are on Honeycomb or later
-   		if (!Build.VERSION.RELEASE.startsWith("1") && !Build.VERSION.RELEASE.startsWith("2"))
-   		{
-   			Preference AppBar = (Preference)findPreference(PREF_HIDEAPPBAR);
-   			AppBar.setEnabled(false);
-   		}
    		
         Preference AutoStart = (Preference)findPreference(PREF_AUTOSTART);
+        Preference AppBar = (Preference)findPreference(PREF_HIDEAPPBAR);
     	Preference Rooted = (Preference)findPreference(PREF_ROOTED);
         
-    	//Disable autostart if we are stored on external storage (may not be mounted)
+    	//Disable auto start if we are stored on external storage (may not be mounted)
        	if(CommonUtil.checkExtraStore(this))
    			AutoStart.setEnabled(false);
         
+        //Hide the option to hide the app bar if we are on Honeycomb or later
+   		if (!Build.VERSION.RELEASE.startsWith("1") && !Build.VERSION.RELEASE.startsWith("2"))
+   			AppBar.setEnabled(false);
+   		
     	//Check if we are can run as root
         Rooted.setEnabled(JNILibrary.GetRooted() != 0);
         
