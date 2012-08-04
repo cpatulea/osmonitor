@@ -36,6 +36,17 @@ public class BootUpReceiver extends BroadcastReceiver{
         	
         	if(!CPUGov.equals(""))
         	{
+        		// We need to delay this for about 30 seconds; otherwise this may cause
+        		// some kernels to hit a deadlock.
+        		try
+        		{
+					Thread.sleep(30000);
+				}
+        		catch (InterruptedException e)
+        		{
+        			//This should not execute.
+				}
+        		
         		for(int CPUNum = 0; CPUNum < JNILibrary.GetProcessorNum(); CPUNum++)
         		{
         			SetCPUCmd += "echo "+CPUGov+
