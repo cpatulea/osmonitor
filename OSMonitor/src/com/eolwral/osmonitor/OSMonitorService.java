@@ -17,6 +17,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.widget.RemoteViews;
 
 public class OSMonitorService extends Service
 {
@@ -77,28 +78,14 @@ public class OSMonitorService extends Service
 				else 
 					serviceNotify.iconLevel = 6+useColor*100;
 				
-				String maininfo = serviceContext.getResources().getString(R.string.process_cpuusage)+" "+cpuLoad+"% , "
-									 +serviceContext.getResources().getString(R.string.process_mem)+":"+MemoryFormat.format(JNILibrary.GetMemBuffer()+JNILibrary.GetMemCached()+JNILibrary.GetMemFree())+ "K"; 
-
-				String extendinfo = "";
+				serviceNotify.contentView.setTextViewText(R.id.StatusBarCPU, cpuLoad+"%");
+				serviceNotify.contentView.setTextViewText(R.id.StatusBarMEM, MemoryFormat.format(JNILibrary.GetMemBuffer()+JNILibrary.GetMemCached()+JNILibrary.GetMemFree())+ "K");
+				serviceNotify.contentView.setTextViewText(R.id.StatusBarBAT, battLevel+"%");
+						
 				if(useCelsius)
-					extendinfo = serviceContext.getResources().getString(R.string.battery_text)+": "+battLevel+"%"+" ("+temperature/10+"°C)";
+					serviceNotify.contentView.setTextViewText(R.id.StatusBarBATTemp, temperature/10+"°C");
 				else
-					extendinfo = serviceContext.getResources().getString(R.string.battery_text)+": "+battLevel+"%"+" ("+((int)temperature/10*9/5+32)+"°F)";
-
-
-				
-				serviceNotify.setLatestEventInfo(serviceContext, maininfo,
-												 extendinfo, serviceNotify.contentIntent);
-				
-/*				serviceNotify.contentView.setTextViewText(R.id.StatusBarCPU, "CPU: "+cpuLoad+"%");
-				serviceNotify.contentView.setTextViewText(R.id.StatusBarMEM, "MEM: "+MemoryFormat.format(JNILibrary.GetMemBuffer()+JNILibrary.GetMemCached()+JNILibrary.GetMemFree())+ "K");
-
-				if(useCelsius)
-					serviceNotify.contentView.setTextViewText(R.id.StatusBarBAT, "BAT: "+battLevel+"%"+" ("+temperature/10+"°C)");
-				else
-					serviceNotify.contentView.setTextViewText(R.id.StatusBarBAT, "BAT: "+battLevel+"%"+" ("+((int)temperature/10*9/5+32)+"°F)");
-	*/			
+					serviceNotify.contentView.setTextViewText(R.id.StatusBarBATTemp, ((int)temperature/10*9/5+32)+"°F");			
 
 				try
 				{
@@ -261,27 +248,22 @@ public class OSMonitorService extends Service
     private void InitNotification() 
     {
 	    int thisIcon = R.anim.statusicon;        		// icon from resources
-	    long thisTime = System.currentTimeMillis();     // notification time
 	    
 	    serviceContext = this; 
 	    CharSequence tickerText = getResources().getString(R.string.bar_title);
 	    CharSequence contentText =  getResources().getString(R.string.bar_text);
 	    CharSequence contentTitle = getResources().getString(R.string.app_title);
 	    
-	    serviceNotify = new Notification(thisIcon, tickerText, thisTime);
+	    serviceNotify = new Notification(thisIcon, tickerText, 0);
 	    serviceNotify.flags |= Notification.FLAG_NO_CLEAR|Notification.FLAG_ONGOING_EVENT|Notification.FLAG_ONLY_ALERT_ONCE;
 
-	    //RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notificationlayout);
-    	//contentView.setImageViewResource(R.id.image, R.drawable.appicon);
-    	//contentView.setTextViewText(R.id.StatusBarCPU, "Wait..");
-    	//serviceNotify.contentView = contentView;
+	    RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notificationlayout);
+    	serviceNotify.contentView = contentView;
 
     	Intent notificationIntent = new Intent(this, OSMonitor.class);
     	notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
     	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
     	serviceNotify.contentIntent = contentIntent;
-
-	    serviceNotify.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
 
     	serviceNM.notify(NOTIFYID, serviceNotify);
     }
