@@ -28,7 +28,6 @@ public class OSMonitorService extends Service
 	private static boolean useCelsius = true;
     private NotificationManager serviceNM = null;
 	private Notification serviceNotify = null;
-	private Context serviceContext = null;
 
 	private boolean TimeUpdate = false;
 	private int UpdateInterval = 2;
@@ -263,11 +262,7 @@ public class OSMonitorService extends Service
     {
 	    int thisIcon = R.anim.statusicon;        		// icon from resources
 	    
-	    serviceContext = this; 
 	    CharSequence tickerText = getResources().getString(R.string.bar_title);
-	    CharSequence contentText =  getResources().getString(R.string.bar_text);
-	    CharSequence contentTitle = getResources().getString(R.string.app_title);
-	    
 	    serviceNotify = new Notification(thisIcon, tickerText, 0);
 	    serviceNotify.flags |= Notification.FLAG_NO_CLEAR|Notification.FLAG_ONGOING_EVENT|Notification.FLAG_ONLY_ALERT_ONCE;
 
