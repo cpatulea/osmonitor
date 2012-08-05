@@ -65,18 +65,32 @@ public class OSMonitorService extends Service
             public void run() {
 
             	cpuLoad = JNILibrary.GetCPUUsageValue();
+            	int color = useColor;
+            	
+            	//Invert the colour if we are on the LP core.
+            	if (JNILibrary.GetTegra3IsTegra3())
+    		    {
+    		    	if (JNILibrary.GetTegra3ActiveCpuGroup() != null)
+    		    	{
+    		    		if (JNILibrary.GetTegra3IsLowPowerGroupActive())
+    		    		{
+    		    			color = color != 0 ? 0 : 1;
+    		    		}
+    		    	}
+    		    }
+            	
 				if(cpuLoad < 20)
-					serviceNotify.iconLevel = 1+useColor*100;
+					serviceNotify.iconLevel = 1+color*100;
 				else if(cpuLoad < 40)
-					serviceNotify.iconLevel = 2+useColor*100;
+					serviceNotify.iconLevel = 2+color*100;
 				else if(cpuLoad < 60)
-					serviceNotify.iconLevel = 3+useColor*100;
+					serviceNotify.iconLevel = 3+color*100;
 				else if(cpuLoad < 80)
-					serviceNotify.iconLevel = 4+useColor*100;
+					serviceNotify.iconLevel = 4+color*100;
 				else if(cpuLoad < 100)
-					serviceNotify.iconLevel = 5+useColor*100;
+					serviceNotify.iconLevel = 5+color*100;
 				else 
-					serviceNotify.iconLevel = 6+useColor*100;
+					serviceNotify.iconLevel = 6+color*100;
 				
 				serviceNotify.contentView.setTextViewText(R.id.StatusBarCPU, cpuLoad+"%");
 				serviceNotify.contentView.setTextViewText(R.id.StatusBarMEM, MemoryFormat.format(JNILibrary.GetMemBuffer()+JNILibrary.GetMemCached()+JNILibrary.GetMemFree())+ "K");
