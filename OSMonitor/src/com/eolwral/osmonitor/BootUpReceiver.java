@@ -36,11 +36,11 @@ public class BootUpReceiver extends BroadcastReceiver{
         	
         	if(!CPUGov.equals(""))
         	{
-        		// We need to delay this for about 30 seconds; otherwise this may cause
+        		// We need to delay this for about 3 minutes; otherwise this may cause
         		// some kernels to hit a deadlock.
         		try
         		{
-					Thread.sleep(30000);
+					Thread.sleep(180000);
 				}
         		catch (InterruptedException e)
         		{
