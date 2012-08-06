@@ -91,7 +91,16 @@ public class OSMonitorService extends Service
 				else 
 					serviceNotify.iconLevel = 6+color*100;
 				
-				serviceNotify.contentView.setTextViewText(R.id.StatusBarCPU, cpuLoad+"%");
+				//Set the text fields in the notification item.
+				String cpuStatus = cpuLoad + "%";
+				if (JNILibrary.GetTegra3IsTegra3())
+				{
+					if (JNILibrary.GetTegra3ActiveCpuGroup() != null)
+    		    	{
+    		    		cpuStatus += " (" + (JNILibrary.GetTegra3IsLowPowerGroupActive() ? "LP" : "G") + ")";
+    		    	}
+				}
+				serviceNotify.contentView.setTextViewText(R.id.StatusBarCPU, cpuStatus);
 				serviceNotify.contentView.setTextViewText(R.id.StatusBarMEM, MemoryFormat.format(JNILibrary.GetMemBuffer()+JNILibrary.GetMemCached()+JNILibrary.GetMemFree())+ "K");
 				serviceNotify.contentView.setTextViewText(R.id.StatusBarBAT, battLevel+"%");
 						
