@@ -74,6 +74,7 @@ public class OSMonitorService extends Service
     		    		if (JNILibrary.GetTegra3IsLowPowerGroupActive())
     		    		{
     		    			color = color != 0 ? 0 : 1;
+    		    			cpuLoad *= JNILibrary.GetTegra3EnabledCoreCount();
     		    		}
     		    	}
     		    }
