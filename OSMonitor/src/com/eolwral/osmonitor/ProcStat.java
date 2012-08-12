@@ -12,6 +12,7 @@ public class ProcStat {
 	private int currentIdle;
 
 	public ProcStat() {
+		lastTotal = lastIdle = -1;
 		currentTotal = currentIdle = -1;
 		Update();
 	}
