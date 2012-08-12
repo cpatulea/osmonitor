@@ -322,13 +322,6 @@ static jint Check_Rooted(JNIEnv* env, jobject thiz)
 
 
 /* CPU */
-static jstring CPU_GetUsage(JNIEnv* env, jobject thiz)
-{
-	char buf[16];
-	cpu_get_usage(buf);
-	return (*env)->NewStringUTF(env, buf);
-}
-
 static jint CPU_GetUsageValue(JNIEnv* env, jobject thiz)
 {
 	return cpu_get_usagevalue();
@@ -1051,7 +1044,6 @@ static JNINativeMethod gMethods[] = {
 		{ "GetRooted", "()I", Check_Rooted},
 
 		/* CPU */
-		{ "GetCPUUsage", "()Ljava/lang/String;", CPU_GetUsage},
 		{ "GetCPUUsageValue", "()I", CPU_GetUsageValue},
 
 		/* Processor */
