@@ -62,11 +62,6 @@ void cpu_init()
 	return;
 }
 
-void cpu_get_usage(char *buf)
-{
-	snprintf(buf, 16, "%d%%", cpu_usage);
-}
-
 int cpu_get_usagevalue()
 {
 	return cpu_usage;

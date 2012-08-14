@@ -42,7 +42,6 @@ public class JNIInterface
     public native int GetRooted();
     
     /* CPU */
-    public native String GetCPUUsage();
     public native int GetCPUUsageValue();
     
     /* Processor */

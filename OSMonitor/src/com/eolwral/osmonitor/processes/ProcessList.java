@@ -53,6 +53,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 {
 	// JNILibrary Interface
 	private JNIInterface JNILibrary = JNIInterface.getInstance();
+	private ProcStat ProcStat;
 
 	// ProcessInfoQuery Object 
 	private ProcessInfoQuery ProcessInfo = null;
@@ -193,7 +194,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 		public void run() {
 
      		if(JNILibrary.doDataLoad() == 1) {
-     			mCPUUsageView.setText(JNILibrary.GetCPUUsage());
+     			mCPUUsageView.setText(ProcStat.GetCPUUsageValue() + "%");
     	     	mProcessCountView.setText(JNILibrary.GetProcessCounts()+"");
     	     	mMemoryTotalView.setText(MemoryFormat.format(JNILibrary.GetMemTotal())+ "K");
     	     	mMemoryFreeView.setText(MemoryFormat.format(JNILibrary.GetMemBuffer()
@@ -201,6 +202,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     	     	
     	     	
     	     	JNILibrary.doDataSwap(); 
+    	     	ProcStat.Update();
     	     	UpdateInterface.notifyDataSetChanged();
      		}
      		else
@@ -213,7 +215,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     					FreezeTask = true;
     				}
     				else
-    	     			mCPUUsageView.setText(JNILibrary.GetCPUUsage());
+    	     			mCPUUsageView.setText(ProcStat.GetCPUUsageValue() + "%");
     			}
     			else
     			{
@@ -237,6 +239,8 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     {
         super.onCreate(savedInstanceState);
         
+        ProcStat = new ProcStat();
+
         // Use a custom layout file
         setContentView(R.layout.processlayout);
 
