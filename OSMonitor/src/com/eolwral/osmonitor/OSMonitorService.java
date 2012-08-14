@@ -32,7 +32,8 @@ public class OSMonitorService extends Service
 	private boolean TimeUpdate = false;
 	private int UpdateInterval = 2;
 	
-	private static JNIInterface JNILibrary = JNIInterface.getInstance();;
+	private static JNIInterface JNILibrary = JNIInterface.getInstance();
+	private ProcStat ProcStat = new ProcStat();
 
 	private static OSMonitorService single = null;
 
@@ -63,7 +64,8 @@ public class OSMonitorService extends Service
 		@Override  
             public void run() {
 
-            	cpuLoad = JNILibrary.GetCPUUsageValue();
+				ProcStat.Update();
+            	cpuLoad = ProcStat.GetCPUUsageValue();
             	int color = useColor;
             	
             	//Invert the colour if we are on the LP core.
@@ -74,7 +76,8 @@ public class OSMonitorService extends Service
     		    		if (JNILibrary.GetTegra3IsLowPowerGroupActive())
     		    		{
     		    			color = color != 0 ? 0 : 1;
-    		    			cpuLoad *= JNILibrary.GetTegra3EnabledCoreCount();
+    		    			cpuLoad = (int)(
+    		    					ProcStat.GetCPUUsageValueFloat() * JNILibrary.GetTegra3EnabledCoreCount());
     		    		}
     		    	}
     		    }
@@ -164,6 +167,7 @@ public class OSMonitorService extends Service
 			if(TimeUpdate == false)
 			{
 				JNILibrary.doCPUUpdate(1);
+				ProcStat.Update();
 				mHandler.postDelayed(mRefresh, UpdateInterval * 1000);
 				TimeUpdate = true;
 			}
