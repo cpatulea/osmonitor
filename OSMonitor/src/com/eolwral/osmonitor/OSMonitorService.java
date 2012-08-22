@@ -77,7 +77,7 @@ public class OSMonitorService extends Service
     		    		{
     		    			color = color != 0 ? 0 : 1;
     		    			cpuLoad = (int)(
-    		    					ProcStat.GetCPUUsageValueFloat() * JNILibrary.GetTegra3EnabledCoreCount());
+    		    					ProcStat.GetCPUUsageValueFloat() * JNILibrary.GetTegra3EnabledCoreCount() * 100);
     		    		}
     		    	}
     		    }

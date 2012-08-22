@@ -70,4 +70,14 @@ public class ProcStat {
 			return (int)(100.0 * (deltaTotal - deltaIdle) / deltaTotal);
 		}
 	}
+	
+	public float GetCPUUsageValueFloat() {
+		if (lastTotal == -1) {  // need 2 Update()s before we have a value
+			return 0;
+		} else {
+			int deltaTotal = currentTotal - lastTotal;
+			int deltaIdle = currentIdle - lastIdle;
+			return (deltaTotal - deltaIdle) / deltaTotal;
+		}
+	}
 }
