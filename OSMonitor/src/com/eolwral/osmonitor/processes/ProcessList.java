@@ -189,40 +189,50 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 			return false;
 		}
 	}
-	
+
 	private Runnable uiRunnable = new Runnable() {
 		public void run() {
 
-     		if(JNILibrary.doDataLoad() == 1) {
-     			mCPUUsageView.setText(ProcStat.GetCPUUsageValue() + "%");
-    	     	mProcessCountView.setText(JNILibrary.GetProcessCounts()+"");
-    	     	mMemoryTotalView.setText(MemoryFormat.format(JNILibrary.GetMemTotal())+ "K");
-    	     	mMemoryFreeView.setText(MemoryFormat.format(JNILibrary.GetMemBuffer()
-    	     					        +JNILibrary.GetMemCached()+JNILibrary.GetMemFree())+ "K");
-    	     	
-    	     	
-    	     	JNILibrary.doDataSwap(); 
-    	     	ProcStat.Update();
-    	     	UpdateInterface.notifyDataSetChanged();
-     		}
-     		else
-     		{
-     			if(FreezeIt)
-    			{
-    				if(!FreezeTask)
-    				{
-    					JNILibrary.doTaskStop();
-    					FreezeTask = true;
-    				}
-    				else
-    	     			mCPUUsageView.setText(ProcStat.GetCPUUsageValue() + "%");
-    			}
-    			else
-    			{
-    				if(FreezeTask)
-    				{
-    					JNILibrary.doTaskStart(JNILibrary.doTaskProcess);
-    					FreezeTask = false;
+			if (JNILibrary.doDataLoad() == 1) {
+				//Multiply the overall CPU usage if we are on the LP cluster
+				int cpuLoad = ProcStat.GetCPUUsageValue();
+				if (JNILibrary.GetTegra3IsTegra3())
+				{
+					if (JNILibrary.GetTegra3ActiveCpuGroup() != null)
+					{
+						if (JNILibrary.GetTegra3IsLowPowerGroupActive())
+						{
+							cpuLoad = (int)(
+									ProcStat.GetCPUUsageValueFloat() * JNILibrary.GetTegra3EnabledCoreCount() * 100);
+						}
+					}
+				}
+				
+				mCPUUsageView.setText(cpuLoad + "%");
+				mProcessCountView.setText(JNILibrary.GetProcessCounts() + "");
+				mMemoryTotalView.setText(MemoryFormat.format(JNILibrary.GetMemTotal()) + "K");
+				mMemoryFreeView.setText(MemoryFormat.format(JNILibrary.GetMemBuffer()
+						+ JNILibrary.GetMemCached()
+						+ JNILibrary.GetMemFree()) + "K");
+
+				JNILibrary.doDataSwap();
+				ProcStat.Update();
+				UpdateInterface.notifyDataSetChanged();
+			}
+			else
+			{
+				if(FreezeIt)
+				{
+					if(!FreezeTask) {
+						JNILibrary.doTaskStop();
+						FreezeTask = true;
+					} else {
+						mCPUUsageView.setText(ProcStat.GetCPUUsageValue() + "%");
+					}
+				} else {
+					if (FreezeTask) {
+						JNILibrary.doTaskStart(JNILibrary.doTaskProcess);
+						FreezeTask = false;
     				}
     			}
 
@@ -1005,9 +1015,9 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
         		Expanded = false;
         		return 1;
         	} 
-        	return 0;
-        }
-        
-    }
+			return 0;
+		}
+
+	}
 
 }
