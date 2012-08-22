@@ -77,7 +77,7 @@ public class ProcStat {
 		} else {
 			int deltaTotal = currentTotal - lastTotal;
 			int deltaIdle = currentIdle - lastIdle;
-			return (deltaTotal - deltaIdle) / deltaTotal;
+			return (deltaTotal - deltaIdle) / (float)deltaTotal;
 		}
 	}
 }
