@@ -183,6 +183,7 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
 				TextView MinCPUBox = (TextView) findViewById(R.id.setCpuMin);
 				TextView MaxCPUBox = (TextView) findViewById(R.id.setCpuMax);
 				TextView GovCPUBox = (TextView) findViewById(R.id.setCpuGov);
+				TextView IOSchedulerBox = (TextView) findViewById(R.id.ioSchedulerText);
 
 				StringBuilder m_UptimeStr = new StringBuilder();
 				long Uptime = android.os.SystemClock.elapsedRealtime();
@@ -299,6 +300,11 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		    	SetCoresBox.setVisibility(View.VISIBLE);
     		    	findViewById(R.id.btnCpuCores).setVisibility(View.VISIBLE);
     		    }
+    		    
+    		    IOSchedulerBox.setText(Html.fromHtml(
+    		    		ResourceManager.getText(R.string.ioscheduler_text) + ": <i>" +
+    		    		IOStat.GetActiveScheduler() + "</i>"));
+    		    
     		   	StringBuilder m_DiskStr = new StringBuilder();
 	
 				java.text.DecimalFormat DiskFormat = new java.text.DecimalFormat(",###");

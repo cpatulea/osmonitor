@@ -120,6 +120,8 @@
 <string name="tegra3activegroup_generic_text">Generic</string>
 <string name="tegra3activegroup_lowpower_text">Low Power</string>
 
+<string name="ioscheduler_text">I/O Scheduler</string>
+
 <!-- Battery -->
 <string name="battery_text">Battery</string>
 <string name="battery_health_text">Health</string>
