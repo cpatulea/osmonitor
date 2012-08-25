@@ -1,9 +1,12 @@
 package com.eolwral.osmonitor;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Random;
@@ -19,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class CommonUtil
 {
@@ -150,4 +154,24 @@ public class CommonUtil
 		}
 	}
 	
+	/**
+	 * Reads the contents of the given file.
+	 * @param file The file to read
+	 * @return The contents of the file. Currently this only returns the first line.
+	 */
+	public static String ReadFile(String file)
+	{
+		try
+		{
+			InputStream is = new FileInputStream(file);
+			BufferedReader r = new BufferedReader(new InputStreamReader(is));
+			String line = r.readLine();
+			is.close();
+			
+			return line;
+		} catch (IOException e) {
+			Log.e("osmonitor", "error reading " + file, e);
+			return "";
+		} 
+	}
 }

@@ -24,11 +24,7 @@ public class ProcStat {
 		int total, idle;
 
 		try {
-			InputStream is = new FileInputStream("/proc/stat");
-			BufferedReader r = new BufferedReader(new InputStreamReader(is));
-			String line = r.readLine();
-			is.close();
-
+			String line = CommonUtil.ReadFile("/proc/stat");
 			StringTokenizer tok = new StringTokenizer(line);
 			String heading = tok.nextToken();
 			if (!heading.equals("cpu")) {
@@ -44,9 +40,6 @@ public class ProcStat {
 			int softirq = Integer.parseInt(tok.nextToken());
 
 			total = user + nice + system + idle + iowait + irq + softirq;
-		} catch (IOException e) {
-			Log.e("osmonitor", "error reading /proc/stat", e);
-			return;
 		} catch (BadHeadingException e) {
 			Log.e("osmonitor", "bad heading in /proc/stat", e);
 			return;
