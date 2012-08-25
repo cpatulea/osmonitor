@@ -190,6 +190,8 @@ void *backgoundtask(void *threadid)
 		update_timer = 0;
 		data_refresh = 1;
 	}
+
+	return NULL;
 }
 
 void library_init()

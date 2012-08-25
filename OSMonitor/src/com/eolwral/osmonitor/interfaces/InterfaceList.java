@@ -302,11 +302,11 @@ public class InterfaceList extends Activity implements OnGestureListener, OnTouc
 
         public TextView getGenericView() {
             // Layout parameters for the ExpandableListView
-            //AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-            //        ViewGroup.LayoutParams.FILL_PARENT, 80);
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
+                    ViewGroup.LayoutParams.FILL_PARENT, 80);
 
             TextView textView = new TextView(getApplication());
-            //textView.setLayoutParams(lp);
+            textView.setLayoutParams(lp);
             
             // Center the text vertically
             textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL | Gravity.LEFT);

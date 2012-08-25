@@ -29,7 +29,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.text.InputType;
-import android.text.method.HideReturnsTransformationMethod;
 
 public class Preferences extends PreferenceActivity {
 

@@ -1,62 +1,113 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:padding="5dp"
-              >
-    <ImageView android:id="@+id/image"
-               android:layout_width="wrap_content"
-               android:layout_height="fill_parent"
-               android:layout_marginRight="5dp"
-               />
-	<LinearLayout android:orientation="vertical"
-              	  android:layout_width="fill_parent"
-              	  android:layout_height="fill_parent"
-              	  >
-    		
-		<LinearLayout android:orientation="horizontal"
-        	      	  android:layout_width="fill_parent"
-            	      android:layout_height="wrap_content" >
-    		
-    		<TextView android:id="@+id/StatusBarCPU" 
-    				  android:textColor="#000"
-    				  android:layout_height="wrap_content" 
-					  android:layout_width="0dip"
-   					  android:layout_weight="1"
-   					  android:padding="3dp"
-   					  android:textSize="15dp" />
-    		
-    		<TextView android:id="@+id/StatusBarMEM" 
-    				  android:textColor="#000"
-    				  android:layout_height="wrap_content" 
-					  android:layout_width="0dip"
-   					  android:layout_weight="1"
-   					  android:padding="3dp"
-   					  android:textSize="15dp" />
-   					  
-    	</LinearLayout>
-    	
-    	<LinearLayout android:orientation="horizontal"
-        	      	  android:layout_width="fill_parent"
-            	      android:layout_height="wrap_content" >
-    		
-    		<TextView android:id="@+id/StatusBarBAT" 
-    				  android:textColor="#000"
-    				  android:layout_height="wrap_content" 
-					  android:layout_width="0dip"
-   					  android:layout_weight="1"
-   					  android:padding="3dp"
-   					  android:textSize="15dp" />
-    		
-    		<TextView android:id="@+id/StatusBarPAD" 
-    				  android:textColor="#000"
-    				  android:layout_height="wrap_content" 
-					  android:layout_width="0dip"
-   					  android:layout_weight="1"
-   					  android:padding="3dp"
-   					  android:textSize="15dp" />
-   					  
-    	</LinearLayout>
-    	
-	</LinearLayout>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    tools:ignore="ContentDescription" >
+
+    <RelativeLayout
+        android:layout_width="64dip"
+        android:layout_height="match_parent"
+        android:layout_marginRight="5dp"
+        style="@style/NotificationIcon">
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="24dip"
+            android:layout_height="24dip"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="false"
+            android:scaleType="centerInside"
+            android:src="@anim/statusicon" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="3dip" >
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/NotificationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                style="@style/NotificationText"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1"
+                android:text="@string/process_cpuusage" />
+
+            <TextView
+                style="@style/NotificationText"
+                android:id="@+id/StatusBarCPU"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1" />
+
+            <TextView
+                style="@style/NotificationText"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1"
+                android:text="@string/process_mem" />
+
+            <TextView
+                style="@style/NotificationText"
+                android:id="@+id/StatusBarMEM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                style="@style/NotificationText"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1"
+                android:text="@string/battery_text" />
+
+            <TextView
+                style="@style/NotificationText"
+                android:id="@+id/StatusBarBAT"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1" />
+
+            <TextView
+                style="@style/NotificationText"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1"
+                android:text="@string/battery_temperature_text" />
+
+            <TextView
+                style="@style/NotificationText"
+                android:id="@+id/StatusBarBATTemp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

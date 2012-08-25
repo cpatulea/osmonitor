@@ -113,13 +113,25 @@
     							 android:background="@drawable/empty"
 							     android:visibility="gone"/>
 				</TableRow>
-				<TableRow android:layout_width="wrap_content"
-						  android:layout_height="wrap_content">
-					<TextView android:id="@+id/activeGroupText"
-							  android:layout_width="wrap_content"
-							  android:layout_height="wrap_content"
-							  android:layout_span="5"
-							  android:visibility="gone" />
+
+				<TableRow
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content" >
+				    <TextView
+				        android:id="@+id/activeGroupText"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:layout_span="5"
+				        android:visibility="gone" />
+				</TableRow>
+				<TableRow
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content" >
+					<TextView
+					    android:id="@+id/ioSchedulerText"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_span="5" />
 				</TableRow>
 			</TableLayout> 
 		</TableRow>
