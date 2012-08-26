@@ -97,7 +97,7 @@ public class OSMonitorService extends Service
 				
 				//Set the text fields in the notification item.
 				String cpuStatus = cpuLoad + "% (";
-				cpuStatus += (JNILibrary.GetProcessorScalCur(0) / 1000) + "Mhz";
+				cpuStatus += (CpuStat.GetCpuFreq(0) / 1000) + "Mhz";
 				if (JNILibrary.GetTegra3IsTegra3())
 				{
 					if (JNILibrary.GetTegra3ActiveCpuGroup() != null)

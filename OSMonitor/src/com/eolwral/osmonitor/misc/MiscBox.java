@@ -219,21 +219,21 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     			ProcessorFreqBox.setText(Html.fromHtml(m_ProcessorStr.toString()));
     			
     			m_ProcessorStr = new StringBuilder();
-    			m_ProcessorStr.append("&nbsp;&nbsp;&nbsp;&nbsp;<b>"+JNILibrary.GetProcessorScalMin(0)+"</b> ");
+    			m_ProcessorStr.append("&nbsp;&nbsp;&nbsp;&nbsp;<b>"+CpuStat.GetCpuMinScalingFreq(0)+"</b> ");
     			MinCPUBox.setText(Html.fromHtml(m_ProcessorStr.toString()));
     			
     			m_ProcessorStr = new StringBuilder();
-    			m_ProcessorStr.append(" <b>"+JNILibrary.GetProcessorScalMax(0)+"</b> ");
+    			m_ProcessorStr.append(" <b>"+CpuStat.GetCpuMaxScalingFreq(0)+"</b> ");
     			MaxCPUBox.setText(Html.fromHtml(m_ProcessorStr.toString()));
     
     			GovCPUBox.setText(Html.fromHtml(ResourceManager.getText(R.string.processorgov_text)
-    		   				  	  +": <i>"+JNILibrary.GetProcessorScalGov(0)+"</i>"));
+    		   				  	  +": <i>"+CpuStat.GetCpuGovernor(0)+"</i>"));
     			
 		        m_ProcessorStr = new StringBuilder();
     		   	
     		   	m_ProcessorStr.append(ResourceManager.getText(R.string.processorfreq_text)+"<br />")
-    		   				  .append("&nbsp;&nbsp;&nbsp;&nbsp;<b>"+JNILibrary.GetProcessorMin(0)+"</b> ~ ")
-    		   				  .append("<b>"+JNILibrary.GetProcessorMax(0)+"</b><br />");
+    		   				  .append("&nbsp;&nbsp;&nbsp;&nbsp;<b>"+CpuStat.GetCpuMinFreq(0)+"</b> ~ ")
+    		   				  .append("<b>"+CpuStat.GetCpuMaxFreq(0)+"</b><br />");
 
 //    		   	m_ProcessorStr.append(ResourceManager.getText(R.string.processorgov_text))
   //  		   				  .append(": <i>"+JNILibrary.GetProcessorScalGov()+"</i><br />");
@@ -245,13 +245,15 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		   	{
     		   		if (i != 0)
     		   			m_ProcessorStr.append(" / ");
-	    		   	if(JNILibrary.GetProcessorScalCur(i) > PreCPUFreq[i])
-	    		   		m_ProcessorStr.append("<font color=red>"+JNILibrary.GetProcessorScalCur(i)+"</font>");
-	    		   	else if (JNILibrary.GetProcessorScalCur(i) < PreCPUFreq[i])
-	    		   		m_ProcessorStr.append("<font color=green>"+JNILibrary.GetProcessorScalCur(i)+"</font>");
+    		   		
+    		   		int cpuFreq = CpuStat.GetCpuFreq(i);
+	    		   	if(cpuFreq > PreCPUFreq[i])
+	    		   		m_ProcessorStr.append("<font color=red>"+cpuFreq+"</font>");
+	    		   	else if (cpuFreq < PreCPUFreq[i])
+	    		   		m_ProcessorStr.append("<font color=green>"+cpuFreq+"</font>");
 	    		   	else
-	        		   	m_ProcessorStr.append(JNILibrary.GetProcessorScalCur(i));
-	    		   	PreCPUFreq[i] = JNILibrary.GetProcessorScalCur(i);
+	        		   	m_ProcessorStr.append(cpuFreq);
+	    		   	PreCPUFreq[i] = cpuFreq;
     		   	}
     		   	for (int i = activeCores; i < PreCPUFreq.length; ++i)
     		   		PreCPUFreq[i] = 0;
@@ -259,7 +261,7 @@ public class MiscBox extends Activity implements OnGestureListener, OnTouchListe
     		   	              .append(ResourceManager.getText(R.string.processorcore_text))
     		   	              .append(": "+activeCores);
     		   	
-    		   	if(JNILibrary.GetProcessorScalMin(0) != 0)
+    		   	if(CpuStat.GetCpuMinScalingFreq(0) != 0)
     		   		ProcessorBox.setText(Html.fromHtml(m_ProcessorStr.toString()));
     		   	else
     		   		ProcessorBox.setText("");
