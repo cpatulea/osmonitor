@@ -39,7 +39,9 @@ public class ProcList {
 	// Collect a snapshot of processes. The returned object is immutable
 	// outside this class.
 	public static ProcList Collect() {
-		return new ProcList();
+		ProcList snapshot = new ProcList();
+		snapshot.pids = new int[] {};
+		return snapshot;
 	}
 
 	// Information about a single process.
@@ -66,6 +68,10 @@ public class ProcList {
 	// list snapshot after it's been collected.
 
 	// Accessors for the {position -> PID} mapping.
+	public int GetProcessCounts() {
+		return pids.length;
+	}
+
 	public int GetProcessPID(int position) {
 		return pids[position];
 	}
