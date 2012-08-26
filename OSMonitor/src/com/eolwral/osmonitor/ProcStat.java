@@ -12,6 +12,7 @@ public class ProcStat {
 	private int currentIdle;
 
 	public ProcStat() {
+		lastTotal = lastIdle = -1;
 		currentTotal = currentIdle = -1;
 		Update();
 	}
@@ -61,16 +62,6 @@ public class ProcStat {
 		currentIdle = idle;
 	}
 
-	public int GetCPUUsageValue() {
-		if (lastTotal == -1) {  // need 2 Update()s before we have a value
-			return 0;
-		} else {
-			int deltaTotal = currentTotal - lastTotal;
-			int deltaIdle = currentIdle - lastIdle;
-			return (int)(100.0 * (deltaTotal - deltaIdle) / deltaTotal);
-		}
-	}
-	
 	public float GetCPUUsageValueFloat() {
 		if (lastTotal == -1) {  // need 2 Update()s before we have a value
 			return 0;
@@ -79,5 +70,9 @@ public class ProcStat {
 			int deltaIdle = currentIdle - lastIdle;
 			return (deltaTotal - deltaIdle) / (float)deltaTotal;
 		}
+	}
+
+	public int GetCPUUsageValue() {
+		return (int)(100.0 * GetCPUUsageValueFloat());
 	}
 }
