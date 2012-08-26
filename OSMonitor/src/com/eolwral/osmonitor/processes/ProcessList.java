@@ -587,9 +587,11 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     		return;
     	}
 
+    	String selectedProcessName;
     	selectedPosition = (int) ((AdapterContextMenuInfo)menuInfo).position;
     	selectedPackagePID = ProcSnapshot.GetProcessPID(selectedPosition);
-    	selectedPackageName = ProcessInfo.getPacakge(selectedPackagePID);
+    	selectedProcessName = ProcSnapshot.GetProcessName(selectedPackagePID);
+    	selectedPackageName = ProcessInfo.getPacakge(selectedProcessName);
  
     	if(shortTOlong)
     	{
@@ -617,7 +619,8 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 
     	if(useMenu)
       	{
-       		menu.setHeaderTitle(ProcessInfo.getPackageName(selectedPackagePID));
+    		String ProcessName = ProcSnapshot.GetProcessName(selectedPackagePID);
+       		menu.setHeaderTitle(ProcessInfo.getPackageName(ProcessName));
        		menu.add(0, 1, 0, getResources().getString(R.string.process_kill));
        		menu.add(0, 2, 0, getResources().getString(R.string.process_switch));
        		menu.add(0, 3, 0, getResources().getString(R.string.process_watchlog));
@@ -799,7 +802,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
         	int ProcessID = ProcSnapshot.GetProcessPID(position);
         	
             ProcessDetailView sv = null;
-            ProcessInfo.doCacheInfo(position);
+            ProcessInfo.doCacheInfo(ProcSnapshot, position);
 
         	String OrderValue = "";
         	 
@@ -828,12 +831,13 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     			DetailIcon = getApplication().getResources().getDrawable(R.drawable.dclose);
 
     		
+    		String ProcessName = ProcSnapshot.GetProcessName(selectedPackagePID);
     		if (convertView == null) {
-                sv = new ProcessDetailView(getApplication(), ProcessInfo.getAppIcon(ProcessID),
+                sv = new ProcessDetailView(getApplication(), ProcessInfo.getAppIcon(ProcessName),
                 							ProcessID,
-                							ProcessInfo.getPackageName(ProcessID),
+                							ProcessInfo.getPackageName(ProcessName),
                 							OrderValue,
-        	        						ProcessInfo.getAppInfo(ProcessID), 
+        	        						ProcessInfo.getAppInfo(ProcSnapshot, ProcessID), 
         	        						ProcessInfo.getExpaned(ProcessID),
         	        						position,
 	               							DetailIcon);
@@ -841,15 +845,15 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
             else
             {
                 sv = (ProcessDetailView)convertView;
-               	sv.setView( ProcessInfo.getAppIcon(ProcessID), 
+               	sv.setView( ProcessInfo.getAppIcon(ProcessName), 
                				ProcessID,
-               				ProcessInfo.getPackageName(ProcessID),
+               				ProcessInfo.getPackageName(ProcessName),
                				OrderValue,
                				position,
                				DetailIcon);
                 
                	if(ProcessInfo.getExpaned(ProcessID))
-               		sv.setContext(ProcessInfo.getAppInfo(ProcessID));
+               		sv.setContext(ProcessInfo.getAppInfo(ProcSnapshot, ProcessID));
                	
                 sv.setExpanded(ProcessInfo.getExpaned(ProcessID));
                 sv.setMultiSelected(ProcessInfo.getSelected(ProcessID));

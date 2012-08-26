@@ -24,8 +24,6 @@ import com.eolwral.osmonitor.*;
 
 public class ProcessInfoQuery extends Thread
 {
-	private JNIInterface JNILibrary = JNIInterface.getInstance();
-	
 	private static ProcessInfoQuery singletone = null;
 	private static PackageManager AppInfo = null;
 	private static Resources  ResInfo = null;
@@ -56,10 +54,10 @@ public class ProcessInfoQuery extends Thread
     private final HashMap<String, Boolean> CacheSelected = new HashMap<String, Boolean>();
 	private final HashMap<String, ProcessInstance> ProcessCache = new HashMap<String, ProcessInstance>();
     
-	public void doCacheInfo(int position)
+	public void doCacheInfo(ProcList ProcSnapshot, int position)
 	{
-		int ProcessID = JNILibrary.GetProcessPID(position);
-		ProcessInstance CacheInstance = ProcessCache.get(JNILibrary.GetProcessName(ProcessID));
+		int ProcessID = ProcSnapshot.GetProcessPID(position);
+		ProcessInstance CacheInstance = ProcessCache.get(ProcSnapshot.GetProcessName(ProcessID));
 		if(CacheInstance != null)
 			return;
 		
@@ -69,13 +67,13 @@ public class ProcessInfoQuery extends Thread
 			e.printStackTrace();
 		}
 		
-		QueryQueue.add(new WaitCache(JNILibrary.GetProcessName(ProcessID),
-				JNILibrary.GetProcessOwner(ProcessID), JNILibrary.GetProcessUID(ProcessID)));
+		QueryQueue.add(new WaitCache(ProcSnapshot.GetProcessName(ProcessID),
+				ProcSnapshot.GetProcessOwner(ProcessID), ProcSnapshot.GetProcessUID(ProcessID)));
 		QueryQueueLock.release();
 		
 		CacheInstance = new ProcessInstance();
-		CacheInstance.Name = JNILibrary.GetProcessName(ProcessID);
-		ProcessCache.put(JNILibrary.GetProcessName(ProcessID), CacheInstance);
+		CacheInstance.Name = ProcSnapshot.GetProcessName(ProcessID);
+		ProcessCache.put(ProcSnapshot.GetProcessName(ProcessID), CacheInstance);
 		
 		return;
 	}
@@ -253,38 +251,38 @@ public class ProcessInfoQuery extends Thread
 	}
 
 	
-	public String getPackageName(int pid) 
+	public String getPackageName(String ProcessName) 
 	{
-		ProcessInstance Process = ProcessCache.get(JNILibrary.GetProcessName(pid));
+		ProcessInstance Process = ProcessCache.get(ProcessName);
 		if(Process != null)
 			return Process.Name;
 		else
 			return "";
 	}
 
-	public String getPacakge(int pid)
+	public String getPacakge(String ProcessName)
 	{
-		ProcessInstance Process = ProcessCache.get(JNILibrary.GetProcessName(pid));
+		ProcessInstance Process = ProcessCache.get(ProcessName);
 		if(Process != null)
 			return Process.Package;
 		else
 			return "";
 	}
 	
-	public String getAppInfo(int pid) {
+	public String getAppInfo(ProcList ProcSnapshot, int pid) {
 		StringBuilder appbuf = new StringBuilder();
 		appbuf.setLength(0);
 
 		appbuf.append("\t"+ResInfo.getString(R.string.process_detail_process)+": ")
-			  .append(JNILibrary.GetProcessName(pid))
+			  .append(ProcSnapshot.GetProcessName(pid))
 	          .append("\n\t"+ResInfo.getString(R.string.process_detail_memory)+": ");
 
-		if(JNILibrary.GetProcessRSS(pid) > 1024) {
-			appbuf.append(JNILibrary.GetProcessRSS(pid)/1024)
+		if(ProcSnapshot.GetProcessRSS(pid) > 1024) {
+			appbuf.append(ProcSnapshot.GetProcessRSS(pid)/1024)
 				  .append('M');
 		}
 		else {
-			appbuf.append(JNILibrary.GetProcessRSS(pid))
+			appbuf.append(ProcSnapshot.GetProcessRSS(pid))
 				  .append('K');
 		}
 		
@@ -314,20 +312,20 @@ public class ProcessInfoQuery extends Thread
 		} catch (Exception e) {}
 		 
 		appbuf.append("\t  "+ResInfo.getString(R.string.process_detail_thread)+": ")
-			  .append(JNILibrary.GetProcessThreads(pid))
+			  .append(ProcSnapshot.GetProcessThreads(pid))
 			  .append("\t  "+ResInfo.getString(R.string.process_detail_load)+": ")
-			  .append(JNILibrary.GetProcessLoad(pid))
+			  .append(ProcSnapshot.GetProcessLoad(pid))
 			  .append("%\n\t"+ResInfo.getString(R.string.process_detail_stime)+": ")
-			  .append(JNILibrary.GetProcessSTime(pid))
+			  .append(ProcSnapshot.GetProcessSTime(pid))
 			  .append("\t  "+ResInfo.getString(R.string.process_detail_utime)+": ")
-			  .append(JNILibrary.GetProcessUTime(pid))
+			  .append(ProcSnapshot.GetProcessUTime(pid))
 			  .append("\t  "+ResInfo.getString(R.string.process_detail_nice)+": ")
-			  .append(JNILibrary.GetProcessNice(pid))
+			  .append(ProcSnapshot.GetProcessNice(pid))
 			  .append("\n\t"+ResInfo.getString(R.string.process_detail_user)+": ")
-			  .append(JNILibrary.GetProcessOwner(pid))
+			  .append(ProcSnapshot.GetProcessOwner(pid))
 			  .append("\t  "+ResInfo.getString(R.string.process_detail_status)+": ");				  
 		
-		String Status = JNILibrary.GetProcessStatus(pid).trim();
+		String Status = ProcSnapshot.GetProcessStatus(pid).trim();
 		if(Status.compareTo("Z") == 0)
 			appbuf.append(ResInfo.getString(R.string.process_status_zombie));
 		else if(Status.compareTo("S") == 0)
@@ -342,14 +340,14 @@ public class ProcessInfoQuery extends Thread
 			appbuf.append(ResInfo.getString(R.string.process_status_unknown));
 
 		appbuf.append("\n\t"+ResInfo.getString(R.string.process_detail_time)+": ")
-		  	  .append(JNILibrary.GetProcessTime(pid));
+		  	  .append(ProcSnapshot.GetProcessTime(pid));
 
 		return appbuf.toString();
 	}
 	
-	public Drawable getAppIcon(int pid) 
+	public Drawable getAppIcon(String ProcessName) 
 	{
-		return ProcessCache.get(JNILibrary.GetProcessName(pid)).Icon;
+		return ProcessCache.get(ProcessName).Icon;
 	}
 
 	private Drawable resizeImage(Drawable Icon) {
