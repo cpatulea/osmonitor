@@ -20,19 +20,19 @@ public class ProcList {
 	public static final int doOrderDESC = 1; 
 
 	// Option setters.
-	private static void SetProcessFilter(int Filter) {
+	public static void SetProcessFilter(int Filter) {
 		ProcList.Filter = Filter;
 	}
 
-	private static void SetProcessAlgorithm(int Algorithm) {
+	public static void SetProcessAlgorithm(int Algorithm) {
 		ProcList.Algorithm = Algorithm;
 	}
 
-	private static void SetProcessSort(int Sort) {
+	public static void SetProcessSort(int Sort) {
 		ProcList.Sort = Sort;
 	}
 
-	private static void SetProcessOrder(int Order) {
+	public static void SetProcessOrder(int Order) {
 		ProcList.Order = Order;
 	}
 
@@ -59,12 +59,15 @@ public class ProcList {
 
 	// A process list snapshot is a mapping of {position -> PID} and a mapping
 	// of {PID -> process info}.
-	private Map<Integer, Integer> pid;
+	private int[] pids;
 	private Map<Integer, Proc> proc;
 	
+	// All nonstatic public methods are accessors only - can't change a process
+	// list snapshot after it's been collected.
+
 	// Accessors for the {position -> PID} mapping.
 	public int GetProcessPID(int position) {
-		return pid.get(position);
+		return pids[position];
 	}
 	
 	// Accessors for the {PID -> process info} mapping.
