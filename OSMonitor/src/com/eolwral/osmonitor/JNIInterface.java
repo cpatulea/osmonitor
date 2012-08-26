@@ -91,32 +91,6 @@ public class JNIInterface
 
 
 	/* Process */
-	public final int doSortPID = 1; 
-	public final int doSortLoad = 2; 
-	public final int doSortMem = 3; 
-	public final int doSortThreads = 4; 
-	public final int doSortName = 5;
-	              
-	public final int doOrderASC = 0; 
-	public final int doOrderDESC = 1; 
-
-    public native int SetProcessFilter(int Filter);
-    public native int SetProcessAlgorithm(int Algorithm);
-    public native int SetProcessSort(int Sort);
-    public native int SetProcessOrder(int Order);
-    public native int GetProcessCounts();
-    public native int GetProcessPID(int position);
-    public native int GetProcessUID(int pid);
-    public native int GetProcessLoad(int pid);
-    public native long GetProcessUTime(int pid);
-    public native long GetProcessSTime(int pid);
-    public native String GetProcessTime(int pid);
-    public native int GetProcessThreads(int pid);
-    public native long GetProcessRSS(int pid);
-    public native long GetProcessNice(int pid);
-    public native String GetProcessName(int pid);
-    public native String GetProcessOwner(int pid);
-    public native String GetProcessStatus(int pid);
     public native String GetProcessNamebyUID(int uid);
 
     public native int doInterfaceNext();
