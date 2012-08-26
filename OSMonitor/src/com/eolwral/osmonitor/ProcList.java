@@ -36,12 +36,17 @@ public class ProcList {
 		ProcList.Order = Order;
 	}
 
-	// Collect a snapshot of processes. The returned object is immutable
-	// outside this class.
-	public static ProcList Collect() {
+	// Return an empty snapshot of processes (0 processes).
+	public static ProcList Empty() {
 		ProcList snapshot = new ProcList();
 		snapshot.pids = new int[] {};
 		return snapshot;
+	}
+
+	// Collect a snapshot of processes. The returned object is immutable
+	// outside this class.
+	public static ProcList Collect() {
+		return Empty();
 	}
 
 	// Information about a single process.

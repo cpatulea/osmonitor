@@ -252,7 +252,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
         super.onCreate(savedInstanceState);
         
         ProcStat = new ProcStat();
-        ProcSnapshot = null;
+        ProcSnapshot = ProcList.Empty();
 
         // Use a custom layout file
         setContentView(R.layout.processlayout);
