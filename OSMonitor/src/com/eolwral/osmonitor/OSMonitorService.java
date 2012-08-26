@@ -96,14 +96,17 @@ public class OSMonitorService extends Service
 					serviceNotify.iconLevel = 6+color*100;
 				
 				//Set the text fields in the notification item.
-				String cpuStatus = cpuLoad + "%";
+				String cpuStatus = cpuLoad + "% (";
+				cpuStatus += (JNILibrary.GetProcessorScalCur(0) / 1000) + "Mhz";
 				if (JNILibrary.GetTegra3IsTegra3())
 				{
 					if (JNILibrary.GetTegra3ActiveCpuGroup() != null)
     		    	{
-    		    		cpuStatus += " (" + (JNILibrary.GetTegra3IsLowPowerGroupActive() ? "LP" : "G") + ")";
+						cpuStatus += " ";
+    		    		cpuStatus += JNILibrary.GetTegra3IsLowPowerGroupActive() ? "LP" : "G";
     		    	}
 				}
+				cpuStatus += ")";
 				serviceNotify.contentView.setTextViewText(R.id.StatusBarCPU, cpuStatus);
 				serviceNotify.contentView.setTextViewText(R.id.StatusBarMEM, MemoryFormat.format(JNILibrary.GetMemBuffer()+JNILibrary.GetMemCached()+JNILibrary.GetMemFree())+ "K");
 				serviceNotify.contentView.setTextViewText(R.id.StatusBarBAT, battLevel+"%");
@@ -113,10 +116,7 @@ public class OSMonitorService extends Service
 				else
 					serviceNotify.contentView.setTextViewText(R.id.StatusBarBATTemp, ((int)temperature/10*9/5+32)+"°F");			
 
-				try
-				{
-					serviceNM.notify(NOTIFYID, serviceNotify);
-				} catch(Exception e) {}
+				serviceNM.notify(NOTIFYID, serviceNotify);				
 
 				mHandler.postDelayed(mRefresh, UpdateInterval * 1000);
             }
