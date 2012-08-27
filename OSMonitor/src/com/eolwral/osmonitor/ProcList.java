@@ -104,8 +104,7 @@ public class ProcList {
 			
 			// Fill name from cmdline.
 			try {
-				FileReader r = new FileReader("/proc/" + pidStr + "/cmdline");
-				proc.name = IOUtils.readUpToNull(r);
+				proc.name = nameFromCmdline(pidStr);
 			} catch (IOException e) {
 				Log.e("ProcList", "exception reading cmdline", e);
 				proc.name = "<error>";
@@ -126,8 +125,13 @@ public class ProcList {
 
 	private static void parseStatIntoProc(String pidStr, Proc proc) throws IOException {
 		BufferedReader r = new BufferedReader(
-				new FileReader("/proc/" + pidStr + "/stat"));
-		String line = r.readLine();
+				new FileReader("/proc/" + pidStr + "/stat"), 1024);
+		String line;
+		try {
+			line = r.readLine();
+		} finally {
+			r.close();
+		}
 		
 		String[] tokens = line.split(" ");
 		
