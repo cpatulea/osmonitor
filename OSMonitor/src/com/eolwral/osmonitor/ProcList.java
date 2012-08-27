@@ -1,6 +1,17 @@
 package com.eolwral.osmonitor;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import android.util.Log;
 
 public class ProcList {
 	// Options controlling how collection is done.
@@ -43,26 +54,89 @@ public class ProcList {
 		return snapshot;
 	}
 
-	// Collect a snapshot of processes. The returned object is immutable
-	// outside this class.
-	public static ProcList Collect() {
-		return Empty();
-	}
-
 	// Information about a single process.
 	private static class Proc {
 		public int uid;
-		public int load;
+		public String owner;
+		public char status;
 		public long utime;
 		public long stime;
-		public String time;
-		public int threads;
-		public long rss;
 		public long nice;
+		public int threads;
+		public int time;  // start time, jiffies since boot
+		public long rss;
+
 		public String name;
-		public String owner;
-		public String status;
+		public int load;
 	};
+
+	// Collect a snapshot of processes. The returned object is immutable
+	// outside this class.
+	public static ProcList Collect() {
+		ProcList snapshot = new ProcList();
+		snapshot.proc = new HashMap<Integer, Proc>();
+		List<Integer> pids = new ArrayList<Integer>();
+		for (String name : new File("/proc").list()) {
+			int pid;
+			
+			try {
+				// TODO: make sure this forces base10
+				pid = Integer.parseInt(name);
+			} catch (NumberFormatException e) {
+				continue;  // some other entry in /proc
+			}
+			
+			final String pidStr = name;
+			Proc proc = new Proc();
+
+			proc.uid = -1;  // FIXME
+			proc.owner = "-1";  // FIXME(proc.uid)
+			
+			// Fills status, utime, stime, nice, threads, start_time, rss.
+			try {
+				parseStatIntoProc(pidStr, proc);
+			} catch (IOException e) {
+				proc.status = '?';
+				proc.utime = proc.stime = proc.rss = -1;
+				proc.threads = proc.time = -1;
+			}
+			
+			// Fill name from cmdline.
+			try {
+				FileReader r = new FileReader("/proc/" + pidStr + "/cmdline");
+				proc.name = IOUtils.readUpToNull(r);
+			} catch (IOException e) {
+				Log.e("ProcList", "exception reading cmdline", e);
+				proc.name = "<error>";
+			}
+			
+			// TODO: proc.name: fall back to stat
+			
+			snapshot.proc.put(pid, proc);
+			pids.add(Integer.valueOf(pid));
+		}
+		snapshot.pids = new int[pids.size()];
+		int index = 0;
+		for (int pid : pids) {
+			snapshot.pids[index++] = pid;
+		}
+		return snapshot;
+	}
+
+	private static void parseStatIntoProc(String pidStr, Proc proc) throws IOException {
+		BufferedReader r = new BufferedReader(
+				new FileReader("/proc/" + pidStr + "/stat"));
+		String line = r.readLine();
+		
+		String[] tokens = line.split(" ");
+		
+		proc.status = tokens[2].charAt(0);
+		proc.utime = Long.parseLong(tokens[13]);
+		proc.stime = Long.parseLong(tokens[14]);
+		proc.threads = Integer.parseInt(tokens[19]);
+		proc.time = Integer.parseInt(tokens[20]);
+		proc.rss = Long.parseLong(tokens[22]);
+	}
 
 	// A process list snapshot is a mapping of {position -> PID} and a mapping
 	// of {PID -> process info}.
@@ -99,7 +173,7 @@ public class ProcList {
     }
 
     public String GetProcessTime(int pid) {
-    	return proc.get(pid).time;
+    	return Integer.toString(proc.get(pid).time);
     }
 
     public int GetProcessThreads(int pid) {
@@ -123,6 +197,6 @@ public class ProcList {
     }
 
     public String GetProcessStatus(int pid) {
-    	return proc.get(pid).status;
+    	return Character.toString(proc.get(pid).status);
     }
 }
