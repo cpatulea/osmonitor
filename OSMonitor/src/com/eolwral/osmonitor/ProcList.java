@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.util.Log;
+import android.util.SparseArray;
 
 public class ProcList {
 	// Options controlling how collection is done.
@@ -74,7 +75,7 @@ public class ProcList {
 	// outside this class.
 	public static ProcList Collect() {
 		ProcList snapshot = new ProcList();
-		snapshot.proc = new HashMap<Integer, Proc>();
+		snapshot.proc = new SparseArray<Proc>();
 		List<Integer> pids = new ArrayList<Integer>();
 		for (String name : new File("/proc").list()) {
 			int pid;
@@ -137,11 +138,20 @@ public class ProcList {
 		proc.time = Integer.parseInt(tokens[20]);
 		proc.rss = Long.parseLong(tokens[22]);
 	}
+	
+	private static String nameFromCmdline(String pidStr) throws IOException {
+		FileReader r = new FileReader("/proc/" + pidStr + "/cmdline");
+		try {
+			return IOUtils.readUpToNull(r);
+		} finally {
+			r.close();
+		}
+	}
 
 	// A process list snapshot is a mapping of {position -> PID} and a mapping
 	// of {PID -> process info}.
 	private int[] pids;
-	private Map<Integer, Proc> proc;
+	private SparseArray<Proc> proc;
 	
 	// All nonstatic public methods are accessors only - can't change a process
 	// list snapshot after it's been collected.
