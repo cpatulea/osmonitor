@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import android.util.Log;
 import android.util.SparseArray;
@@ -133,16 +134,25 @@ public class ProcList {
 			r.close();
 		}
 		
-		String[] tokens = line.split(" ");
-		
-		proc.status = tokens[2].charAt(0);
-		proc.utime = Long.parseLong(tokens[13]);
-		proc.stime = Long.parseLong(tokens[14]);
-		proc.threads = Integer.parseInt(tokens[19]);
-		proc.time = Integer.parseInt(tokens[20]);
-		proc.rss = Long.parseLong(tokens[22]);
+		StringTokenizer tok = new StringTokenizer(line);
+		skipTokens(tok, 2);
+		proc.status = tok.nextToken().charAt(0);  // 2
+		skipTokens(tok, 11);
+		proc.utime = Long.parseLong(tok.nextToken());  // 13
+		proc.stime = Long.parseLong(tok.nextToken());  // 14
+		skipTokens(tok, 5);
+		proc.threads = Integer.parseInt(tok.nextToken());  // 19
+		proc.time = Integer.parseInt(tok.nextToken());  // 20
+		tok.nextToken();
+		proc.rss = Long.parseLong(tok.nextToken());  // 22
 	}
 	
+	private static void skipTokens(StringTokenizer tok, int num) {
+		for (int i = 0; i < num; i++) {
+			tok.nextToken();
+		}
+	}
+
 	private static String nameFromCmdline(String pidStr) throws IOException {
 		FileReader r = new FileReader("/proc/" + pidStr + "/cmdline");
 		try {
