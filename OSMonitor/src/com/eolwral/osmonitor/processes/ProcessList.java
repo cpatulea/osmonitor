@@ -831,7 +831,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     			DetailIcon = getApplication().getResources().getDrawable(R.drawable.dclose);
 
     		
-    		String ProcessName = ProcSnapshot.GetProcessName(selectedPackagePID);
+    		String ProcessName = ProcSnapshot.GetProcessName(ProcessID);
     		if (convertView == null) {
                 sv = new ProcessDetailView(getApplication(), ProcessInfo.getAppIcon(ProcessName),
                 							ProcessID,
