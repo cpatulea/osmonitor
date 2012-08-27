@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.util.Log;
 import android.util.SparseArray;
@@ -134,17 +136,22 @@ public class ProcList {
 			r.close();
 		}
 		
-		StringTokenizer tok = new StringTokenizer(line);
-		skipTokens(tok, 2);
-		proc.status = tok.nextToken().charAt(0);  // 2
-		skipTokens(tok, 11);
-		proc.utime = Long.parseLong(tok.nextToken());  // 13
-		proc.stime = Long.parseLong(tok.nextToken());  // 14
-		skipTokens(tok, 5);
-		proc.threads = Integer.parseInt(tok.nextToken());  // 19
-		proc.time = Integer.parseInt(tok.nextToken());  // 20
-		tok.nextToken();
-		proc.rss = Long.parseLong(tok.nextToken());  // 22
+		final Pattern RE = Pattern.compile(
+				"^(?:\\S+\\s+){2}(\\S+)\\s+" +
+				"(?:\\S+\\s+){11}(\\S+)\\s+(\\S+)\\s+" +
+				"(?:\\S+\\s+){5}(\\S+)\\s+(\\S+)\\s+" +
+				"(?:\\S+\\s+)(\\S+)\\s+");
+		Matcher m = RE.matcher(line);
+		if (!m.find()) {
+			throw new IllegalStateException("malformed proc stat file");
+		}
+		
+		proc.status = m.group(1).charAt(0);
+		proc.utime = Long.parseLong(m.group(2));
+		proc.stime = Long.parseLong(m.group(3));
+		proc.threads = Integer.parseInt(m.group(4));
+		proc.time = Integer.parseInt(m.group(5));
+		proc.rss = Long.parseLong(m.group(6));
 	}
 	
 	private static void skipTokens(StringTokenizer tok, int num) {
