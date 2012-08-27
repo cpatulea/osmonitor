@@ -126,6 +126,12 @@ public class ProcList {
 		return snapshot;
 	}
 
+	private static final Pattern PROC_STAT_PATTERN = Pattern.compile(
+			"^(?:\\S+\\s+){2}(\\S+)\\s+" +
+			"(?:\\S+\\s+){11}(\\S+)\\s+(\\S+)\\s+" +
+			"(?:\\S+\\s+){5}(\\S+)\\s+(\\S+)\\s+" +
+			"(?:\\S+\\s+)(\\S+)\\s+");
+	
 	private static void parseStatIntoProc(String pidStr, Proc proc) throws IOException {
 		BufferedReader r = new BufferedReader(
 				new FileReader("/proc/" + pidStr + "/stat"), 1024);
@@ -136,12 +142,7 @@ public class ProcList {
 			r.close();
 		}
 		
-		final Pattern RE = Pattern.compile(
-				"^(?:\\S+\\s+){2}(\\S+)\\s+" +
-				"(?:\\S+\\s+){11}(\\S+)\\s+(\\S+)\\s+" +
-				"(?:\\S+\\s+){5}(\\S+)\\s+(\\S+)\\s+" +
-				"(?:\\S+\\s+)(\\S+)\\s+");
-		Matcher m = RE.matcher(line);
+		Matcher m = PROC_STAT_PATTERN.matcher(line);
 		if (!m.find()) {
 			throw new IllegalStateException("malformed proc stat file");
 		}
