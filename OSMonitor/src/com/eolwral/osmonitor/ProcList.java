@@ -133,16 +133,15 @@ public class ProcList {
 			"(?:\\S+\\s+)(\\S+)\\s+");
 	
 	private static void parseStatIntoProc(String pidStr, Proc proc) throws IOException {
-		BufferedReader r = new BufferedReader(
-				new FileReader("/proc/" + pidStr + "/stat"), 1024);
-		String line;
+		Reader r = new FileReader("/proc/" + pidStr + "/stat");
+		String stat;
 		try {
-			line = r.readLine();
+			stat = IOUtils.readAll(r);
 		} finally {
 			r.close();
 		}
 		
-		Matcher m = PROC_STAT_PATTERN.matcher(line);
+		Matcher m = PROC_STAT_PATTERN.matcher(stat);
 		if (!m.find()) {
 			throw new IllegalStateException("malformed proc stat file");
 		}
@@ -153,12 +152,6 @@ public class ProcList {
 		proc.threads = Integer.parseInt(m.group(4));
 		proc.time = Integer.parseInt(m.group(5));
 		proc.rss = Long.parseLong(m.group(6));
-	}
-	
-	private static void skipTokens(StringTokenizer tok, int num) {
-		for (int i = 0; i < num; i++) {
-			tok.nextToken();
-		}
 	}
 
 	private static String nameFromCmdline(String pidStr) throws IOException {
