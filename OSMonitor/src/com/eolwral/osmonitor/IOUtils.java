@@ -1,47 +1,73 @@
 package com.eolwral.osmonitor;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IOUtils {
+	private static final Charset US_ASCII = Charset.forName("US-ASCII");
+
 	/**
-	 * Read entire contents of a reader.
+	 * Read entire contents of an @code{InputStream}.
 	 *
 	 * TODO: There should be a character limit here to prevent memory blowups.
 	 *
-	 * @param r reader to read from
+	 * @param is stream to read from
 	 * @return the characters read
 	 * @throws IOException
 	 */
-	public static String readAll(Reader r) throws IOException {
-		// Choose this value such that most readers are less than this many
-		// characters long. If the particular reader given satisfies this
+	public static String readAll(InputStream is) throws IOException {
+		// Choose this value such that most input streams are shorter than this
+		// many bytes. If the particular input stream given satisfies this
 		// condition, this function will only make two calls to read(), one to
 		// fill the buffer, and another to detect EOF.
-		final int BUFFER_SIZE_CHARS = 256;
+		final int BUFFER_SIZE_BYTES = 256;
 
-		char[] buffer = new char[BUFFER_SIZE_CHARS];
-		int numRead;
+		List<ByteBuffer> buffers = new ArrayList<ByteBuffer>();
+		int total = 0;
+		for (;;) {
+			ByteBuffer b = ByteBuffer.allocate(BUFFER_SIZE_BYTES);
+			
+			int numRead = is.read(b.array());
+			if (numRead == -1) {
+				break;
+			}
 
-		// Slow path: accumulate into a StringBuilder.
-		StringBuilder b = new StringBuilder();
-		while ((numRead = r.read(buffer)) != -1) {
-			b.append(buffer, 0, numRead);
+			b.limit(numRead);
+			buffers.add(b);
+			total += numRead;
 		}
 
-		return b.toString();
+		ByteBuffer finalBuffer;
+
+		if (buffers.size() == 0) {
+			return "";
+		} else if (buffers.size() == 1) {  // fast path for short inputs
+			finalBuffer = buffers.get(0);
+		} else {
+			finalBuffer = ByteBuffer.allocate(total);
+			for (ByteBuffer b : buffers) {
+				finalBuffer.put(b);
+			}
+		}
+		
+		return US_ASCII.decode(finalBuffer).toString();
 	}
 
 	/**
-	 * Read entire contents of a @code{Reader}, but return only the contents
-	 * up to, but not including, the first null (\0) character.
+	 * Read entire contents of an @code{InputStream}, but return only the
+	 * contents up to, but not including, the first null (\0) character.
 	 *
-	 * @param r reader to read from
+	 * @param is stream to read from
 	 * @return the characters read, not including the null terminator
 	 * @throws IOException
 	 */
-	public static String readUpToNull(Reader r) throws IOException {
-		String contents = readAll(r);
+	public static String readUpToNull(InputStream is) throws IOException {
+		String contents = readAll(is);
 		int indexOfNull = contents.indexOf('\0');
 		if (indexOfNull == -1) {
 			return contents;

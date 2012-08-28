@@ -2,9 +2,11 @@ package com.eolwral.osmonitor;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,12 +135,12 @@ public class ProcList {
 			"(?:\\S+\\s+)(\\S+)\\s+");
 	
 	private static void parseStatIntoProc(String pidStr, Proc proc) throws IOException {
-		Reader r = new FileReader("/proc/" + pidStr + "/stat");
+		InputStream is = new FileInputStream("/proc/" + pidStr + "/stat");
 		String stat;
 		try {
-			stat = IOUtils.readAll(r);
+			stat = IOUtils.readAll(is);
 		} finally {
-			r.close();
+			is.close();
 		}
 		
 		Matcher m = PROC_STAT_PATTERN.matcher(stat);
@@ -155,11 +157,11 @@ public class ProcList {
 	}
 
 	private static String nameFromCmdline(String pidStr) throws IOException {
-		FileReader r = new FileReader("/proc/" + pidStr + "/cmdline");
+		InputStream is = new FileInputStream("/proc/" + pidStr + "/cmdline");
 		try {
-			return IOUtils.readUpToNull(r);
+			return IOUtils.readUpToNull(is);
 		} finally {
-			r.close();
+			is.close();
 		}
 	}
 
