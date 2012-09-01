@@ -17,6 +17,14 @@ public class IOUtils {
 	 * @throws IOException
 	 */
 	public static String readAll(InputStream is) throws IOException {
+		// Some benchmarking notes (real hardware vs emulator):
+		//
+		// On a Galaxy Nexus, this method runs in 0.4 ms per call over 815 calls
+		// in 3 process list refreshes.
+		//
+		// In the emulator, it takes 2.9 ms per call over 464 calls in 4 process
+		// list refreshes.
+
 		// Choose this value such that most input streams are shorter than this
 		// many bytes. If the particular input stream given satisfies this
 		// condition, this function will only make two calls to read(), one to
