@@ -1095,23 +1095,6 @@ static JNINativeMethod gMethods[] = {
 		{ "GetCacheMemAvail", "()D", FS_GetCacheMemAvail},
 
 		/* Process */
-		{ "SetProcessFilter", "(I)I", PS_SETFILTER},
-		{ "SetProcessAlgorithm", "(I)I", PS_SETALGORITHM},
-		{ "SetProcessSort", "(I)I", PS_SETSORT},
-		{ "SetProcessOrder", "(I)I", PS_SETORDER},
-		{ "GetProcessCounts", "()I", PS_Count},
-		{ "GetProcessPID", "(I)I", PS_PID},
-		{ "GetProcessUID", "(I)I", PS_UID},
-		{ "GetProcessLoad", "(I)I", PS_Load},
-		{ "GetProcessSTime", "(I)J", PS_STime},
-		{ "GetProcessUTime", "(I)J", PS_UTime},
-		{ "GetProcessTime", "(I)Ljava/lang/String;", PS_Time},
-		{ "GetProcessRSS", "(I)J", PS_RSS},
-		{ "GetProcessNice", "(I)J", PS_Nice},
-		{ "GetProcessThreads", "(I)I", PS_THREAD},
-		{ "GetProcessName", "(I)Ljava/lang/String;", PS_Name},
-		{ "GetProcessOwner", "(I)Ljava/lang/String;", PS_Owner},
-		{ "GetProcessStatus", "(I)Ljava/lang/String;", PS_Status},
 		{ "GetProcessNamebyUID", "(I)Ljava/lang/String;", PS_NameByUID},
 
 		/* Interface */
