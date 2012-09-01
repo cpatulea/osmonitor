@@ -169,5 +169,8 @@ public class JNIInterface
 	public native int SetLogcatPID(int value);
 	public native int SetLogcatLevel(int value);
 	public native int SetLogcatMessage(String filter);
+	
+	public native int GetFileOwner(String file);
+	public native String GetUidName(int uid);
 }
 

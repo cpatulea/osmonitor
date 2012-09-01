@@ -1028,6 +1028,35 @@ static jstring Logcat_GetMsg( JNIEnv* env, jobject thiz, jint position)
 		return (*env)->NewStringUTF(env, "");
 }
 
+static int Runtime_GetFileOwner(JNIEnv* env, jobject thiz, jstring file)
+{
+	jboolean flag = 0;
+	const char* fileStr = (const char*)(*env)->GetStringUTFChars(env, file, &flag);
+	if (fileStr != NULL)
+	{
+		struct stat stats;
+		stat(fileStr, &stats);
+		(*env)->ReleaseStringUTFChars(env, file, fileStr);
+
+		return stats.st_uid;
+	}
+
+	return -1;
+}
+
+static jstring Runtime_GetUidName(JNIEnv* env, jobject thiz, jint uid)
+{
+	struct passwd *pw = getpwuid(uid);
+	if (pw == NULL)
+	{
+		return (*env)->NewStringUTF(env, NULL);
+	}
+	else
+	{
+		return (*env)->NewStringUTF(env, pw->pw_name);
+	}
+}
+
 /* JNI Load and UnLoad */
 
 static const char *classPathName = "com/eolwral/osmonitor/JNIInterface";
@@ -1149,6 +1178,10 @@ static JNINativeMethod gMethods[] = {
 		{ "SetLogcatPID", "(I)I", Logcat_SetFilterPID},
 		{ "SetLogcatLevel", "(I)I", Logcat_SetFilterLevel},
 		{ "SetLogcatMessage", "(Ljava/lang/String;)I", Logcat_SetFilterString},
+
+		/* Expose runtime stuff to Java */
+		{ "GetFileOwner", "(Ljava/lang/String;)I", Runtime_GetFileOwner },
+		{ "GetUidName", "(I)Ljava/lang/String;", Runtime_GetUidName }
 };
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)

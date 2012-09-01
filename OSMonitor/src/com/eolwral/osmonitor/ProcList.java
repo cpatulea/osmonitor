@@ -95,8 +95,8 @@ public class ProcList {
 			final String pidStr = name;
 			Proc proc = new Proc();
 
-			proc.uid = -1;  // FIXME
-			proc.owner = "-1";  // FIXME(proc.uid)
+			proc.uid = JNIInterface.getInstance().GetFileOwner("/proc/" + pid);
+			proc.owner = JNIInterface.getInstance().GetUidName(proc.uid);
 			
 			// Fills status, utime, stime, nice, threads, start_time, rss.
 			try {
@@ -118,7 +118,29 @@ public class ProcList {
 			// TODO: proc.name: fall back to stat
 			
 			snapshot.proc.put(pid, proc);
-			pids.add(Integer.valueOf(pid));
+			
+			if (Filter == 1)
+			{
+				if ((proc.owner == null || proc.owner.equals("root")) ||
+					(
+						proc.name.length() == 0 || 
+						proc.name.startsWith("/system/") ||
+						proc.name.startsWith("/sbin/")
+					))
+				{
+					//TODO: What do we do with system processes?
+					//ps_list_add(&psinfo);
+				}
+				else
+				{
+					pids.add(pid);
+				}
+
+			}
+			else
+			{
+				pids.add(pid);
+			}
 		}
 		snapshot.pids = new int[pids.size()];
 		int index = 0;
