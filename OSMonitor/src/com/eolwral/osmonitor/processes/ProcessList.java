@@ -54,6 +54,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 	// JNILibrary Interface
 	private JNIInterface JNILibrary = JNIInterface.getInstance();
 	private ProcStat ProcStat;
+	private ProcList ProcSnapshot;
 
 	// ProcessInfoQuery Object 
 	private ProcessInfoQuery ProcessInfo = null;
@@ -209,7 +210,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 				}
 				
 				mCPUUsageView.setText(cpuLoad + "%");
-				mProcessCountView.setText(JNILibrary.GetProcessCounts() + "");
+				mProcessCountView.setText(ProcSnapshot.GetProcessCounts() + "");
 				mMemoryTotalView.setText(MemoryFormat.format(JNILibrary.GetMemTotal()) + "K");
 				mMemoryFreeView.setText(MemoryFormat.format(JNILibrary.GetMemBuffer()
 						+ JNILibrary.GetMemCached()
@@ -217,6 +218,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 
 				JNILibrary.doDataSwap();
 				ProcStat.Update();
+				ProcSnapshot = ProcList.Collect();
 				UpdateInterface.notifyDataSetChanged();
 			}
 			else
@@ -250,6 +252,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
         super.onCreate(savedInstanceState);
         
         ProcStat = new ProcStat();
+        ProcSnapshot = ProcList.Empty();
 
         // Use a custom layout file
         setContentView(R.layout.processlayout);
@@ -291,7 +294,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
            	   	        else
            	   	        {
      	   	        		android.os.Process.killProcess(tPID);
-       	   	        		ActivityMan.restartPackage(JNILibrary.GetProcessName(tPID));
+       	   	        		ActivityMan.restartPackage(ProcSnapshot.GetProcessName(tPID));
            	   	        }
            			}
            			
@@ -301,6 +304,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
          	        ProcessInfo.clearSelected();
 
          	        JNILibrary.doDataRefresh();
+         	        ProcSnapshot = ProcList.Collect();
          	        
          	        UpdateInterface.notifyDataSetChanged();
 
@@ -360,7 +364,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 
            	    		@Override
            	    		public void onClick(DialogInterface dialog, int which) {
-           	    			JNILibrary.SetProcessSort(which+1);
+           	    			ProcList.SetProcessSort(which+1);
            	    	        
            	    			// change display
            	    	        TextView OrderType = (TextView) findViewById(R.id.OrderType);
@@ -416,18 +420,18 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 	    ExcludeSystem = settings.getBoolean(Preferences.PREF_EXCLUDE, true);
 	    
 	    // change options
-   		JNILibrary.SetProcessSort(OrderBy);
-   		JNILibrary.SetProcessAlgorithm(Algorithm);
+	    ProcList.SetProcessSort(OrderBy);
+   		ProcList.SetProcessAlgorithm(Algorithm);
    		
         if(ExcludeSystem)
-    		JNILibrary.SetProcessFilter(1);
+    		ProcList.SetProcessFilter(1);
         else
-        	JNILibrary.SetProcessFilter(0);
+        	ProcList.SetProcessFilter(0);
         
         if(SortIn)
-        	JNILibrary.SetProcessOrder(0);
+        	ProcList.SetProcessOrder(0);
         else 
-        	JNILibrary.SetProcessOrder(1);
+        	ProcList.SetProcessOrder(1);
         
         // change display
         TextView OrderType = (TextView) findViewById(R.id.OrderType);
@@ -583,9 +587,11 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     		return;
     	}
 
+    	String selectedProcessName;
     	selectedPosition = (int) ((AdapterContextMenuInfo)menuInfo).position;
-    	selectedPackagePID = JNILibrary.GetProcessPID(selectedPosition);
-    	selectedPackageName = ProcessInfo.getPacakge(selectedPackagePID);
+    	selectedPackagePID = ProcSnapshot.GetProcessPID(selectedPosition);
+    	selectedProcessName = ProcSnapshot.GetProcessName(selectedPackagePID);
+    	selectedPackageName = ProcessInfo.getPacakge(selectedProcessName);
  
     	if(shortTOlong)
     	{
@@ -613,7 +619,8 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 
     	if(useMenu)
       	{
-       		menu.setHeaderTitle(ProcessInfo.getPackageName(selectedPackagePID));
+    		String ProcessName = ProcSnapshot.GetProcessName(selectedPackagePID);
+       		menu.setHeaderTitle(ProcessInfo.getPackageName(ProcessName));
        		menu.add(0, 1, 0, getResources().getString(R.string.process_kill));
        		menu.add(0, 2, 0, getResources().getString(R.string.process_switch));
        		menu.add(0, 3, 0, getResources().getString(R.string.process_watchlog));
@@ -659,7 +666,8 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
    	        {
    	        	JNILibrary.doDataRefresh();
    	        }
-   	        
+
+   	        ProcSnapshot = ProcList.Collect();
    	        UpdateInterface.notifyDataSetChanged();
    	        
    	        return true;
@@ -708,7 +716,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
    	    	AlertDialog.Builder builder = new AlertDialog.Builder(ProcessList.this);
    	    	builder.setTitle(ProcessList.this.getResources().getString(R.string.process_nice));
 
-   	    	builder.setSingleChoiceItems(NiceValue, (int) (JNILibrary.GetProcessNice(selectedPackagePID)+20),
+   	    	builder.setSingleChoiceItems(NiceValue, (int) (ProcSnapshot.GetProcessNice(selectedPackagePID)+20),
    	    			new DialogInterface.OnClickListener(){
 
    	    		@Override
@@ -775,10 +783,10 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     
     private class ProcessListAdapter extends BaseAdapter {
     	
-    	public int OrderBy = JNILibrary.doSortPID;
+    	public int OrderBy = ProcList.doSortPID;
     	
         public int getCount() {
-            return JNILibrary.GetProcessCounts();
+            return ProcSnapshot.GetProcessCounts();
         }
 
         public Object getItem(int position) {
@@ -791,10 +799,10 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
  
         public View getView(int position, View convertView, ViewGroup parent) {
 
-        	int ProcessID = JNILibrary.GetProcessPID(position);
+        	int ProcessID = ProcSnapshot.GetProcessPID(position);
         	
             ProcessDetailView sv = null;
-            ProcessInfo.doCacheInfo(position);
+            ProcessInfo.doCacheInfo(ProcSnapshot, position);
 
         	String OrderValue = "";
         	 
@@ -803,16 +811,16 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
         	case 1:
         	case 2:
         	case 5:
-        		OrderValue = JNILibrary.GetProcessLoad(ProcessID)+"%";
+        		OrderValue = ProcSnapshot.GetProcessLoad(ProcessID)+"%";
         		break;
         	case 3:
-        		if(JNILibrary.GetProcessRSS(ProcessID) > 1024) 
-        			OrderValue = (JNILibrary.GetProcessRSS(ProcessID)/1024)+"M";
+        		if(ProcSnapshot.GetProcessRSS(ProcessID) > 1024) 
+        			OrderValue = (ProcSnapshot.GetProcessRSS(ProcessID)/1024)+"M";
         		else
-        			OrderValue = JNILibrary.GetProcessRSS(ProcessID)+"K";
+        			OrderValue = ProcSnapshot.GetProcessRSS(ProcessID)+"K";
         		break;
         	case 4:
-        		OrderValue = JNILibrary.GetProcessThreads(ProcessID)+"";
+        		OrderValue = ProcSnapshot.GetProcessThreads(ProcessID)+"";
         		break;
         	}
         	
@@ -823,12 +831,13 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     			DetailIcon = getApplication().getResources().getDrawable(R.drawable.dclose);
 
     		
+    		String ProcessName = ProcSnapshot.GetProcessName(ProcessID);
     		if (convertView == null) {
-                sv = new ProcessDetailView(getApplication(), ProcessInfo.getAppIcon(ProcessID),
+                sv = new ProcessDetailView(getApplication(), ProcessInfo.getAppIcon(ProcessName),
                 							ProcessID,
-                							ProcessInfo.getPackageName(ProcessID),
+                							ProcessInfo.getPackageName(ProcessName),
                 							OrderValue,
-        	        						ProcessInfo.getAppInfo(ProcessID), 
+        	        						ProcessInfo.getAppInfo(ProcSnapshot, ProcessID), 
         	        						ProcessInfo.getExpaned(ProcessID),
         	        						position,
 	               							DetailIcon);
@@ -836,15 +845,15 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
             else
             {
                 sv = (ProcessDetailView)convertView;
-               	sv.setView( ProcessInfo.getAppIcon(ProcessID), 
+               	sv.setView( ProcessInfo.getAppIcon(ProcessName), 
                				ProcessID,
-               				ProcessInfo.getPackageName(ProcessID),
+               				ProcessInfo.getPackageName(ProcessName),
                				OrderValue,
                				position,
                				DetailIcon);
                 
                	if(ProcessInfo.getExpaned(ProcessID))
-               		sv.setContext(ProcessInfo.getAppInfo(ProcessID));
+               		sv.setContext(ProcessInfo.getAppInfo(ProcSnapshot, ProcessID));
                	
                 sv.setExpanded(ProcessInfo.getExpaned(ProcessID));
                 sv.setMultiSelected(ProcessInfo.getSelected(ProcessID));
@@ -854,7 +863,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
         }
         
         public boolean toggle(ProcessDetailView v, int position, boolean split, boolean multi) {
-    		int ProcessID = JNILibrary.GetProcessPID(position);
+    		int ProcessID = ProcSnapshot.GetProcessPID(position);
 
     		if(multi)
     		{
