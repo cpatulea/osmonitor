@@ -2,15 +2,11 @@ package com.eolwral.osmonitor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 public class IOUtils {
-	private static final Charset US_ASCII = Charset.forName("US-ASCII");
-
 	/**
 	 * Read entire contents of an @code{InputStream}.
 	 *
@@ -55,7 +51,8 @@ public class IOUtils {
 			}
 		}
 		
-		return US_ASCII.decode(finalBuffer).toString();
+		return new String(finalBuffer.array(), 0, finalBuffer.limit(),
+						  "ISO-8859-1");
 	}
 
 	/**
