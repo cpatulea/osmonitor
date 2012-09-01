@@ -164,8 +164,7 @@ public class CommonUtil
 		try
 		{
 			InputStream is = new FileInputStream(file);
-			BufferedReader r = new BufferedReader(new InputStreamReader(is));
-			String line = r.readLine();
+			String line = IOUtils.readAll(is);
 			is.close();
 			
 			return line;

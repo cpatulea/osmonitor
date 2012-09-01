@@ -12,7 +12,7 @@ public class CpuStat {
 	public static int GetCpuMaxFreq(int cpu)
 	{
 		try {
-			String file = CommonUtil.ReadFile(String.format(CPUINFO_MAX, cpu));
+			String file = CommonUtil.ReadFile(String.format(CPUINFO_MAX, cpu)).trim();
 			return Integer.parseInt(file);
 		} catch (NumberFormatException e) {
 			return 0;
@@ -22,7 +22,7 @@ public class CpuStat {
 	public static int GetCpuMinFreq(int cpu)
 	{
 		try {
-			String file = CommonUtil.ReadFile(String.format(CPUINFO_MIN, cpu));
+			String file = CommonUtil.ReadFile(String.format(CPUINFO_MIN, cpu)).trim();
 			return Integer.parseInt(file);
 		} catch (NumberFormatException e) {
 			return 0;
@@ -32,7 +32,7 @@ public class CpuStat {
 	public static int GetCpuFreq(int cpu)
 	{
 		try {
-			String file = CommonUtil.ReadFile(String.format(CPU_SCALING_CUR, cpu));
+			String file = CommonUtil.ReadFile(String.format(CPU_SCALING_CUR, cpu)).trim();
 			return Integer.parseInt(file);
 		} catch (NumberFormatException e) {
 			return 0;
@@ -42,7 +42,7 @@ public class CpuStat {
 	public static int GetCpuMaxScalingFreq(int cpu)
 	{
 		try {
-			String file = CommonUtil.ReadFile(String.format(CPU_SCALING_MAX, cpu));
+			String file = CommonUtil.ReadFile(String.format(CPU_SCALING_MAX, cpu)).trim();
 			return Integer.parseInt(file);
 		} catch (NumberFormatException e) {
 			return 0;
@@ -52,7 +52,7 @@ public class CpuStat {
 	public static int GetCpuMinScalingFreq(int cpu)
 	{
 		try {
-			String file = CommonUtil.ReadFile(String.format(CPU_SCALING_MIN, cpu));
+			String file = CommonUtil.ReadFile(String.format(CPU_SCALING_MIN, cpu)).trim();
 			return Integer.parseInt(file);
 		} catch (NumberFormatException e) {
 			return 0;
@@ -61,6 +61,6 @@ public class CpuStat {
 	
 	public static String GetCpuGovernor(int cpu)
 	{
-		return CommonUtil.ReadFile(String.format(CPU_SCALING_GOR, cpu));
+		return CommonUtil.ReadFile(String.format(CPU_SCALING_GOR, cpu)).trim();
 	}
 }
