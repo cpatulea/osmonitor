@@ -173,7 +173,6 @@ public class DebugBox extends Activity implements OnGestureListener, OnTouchList
  			   		if(EmptyMsg != null)
  			   			EmptyMsg.setText("");
  				
- 			   		JNILibrary.doDataSwap();
  			   		UpdateInterface.notifyDataSetChanged();
 				}
 			}

@@ -33,7 +33,6 @@ public class JNIInterface
     public native int doTaskStop();
     public native int doTaskStart(int TaskType);
     public native int doDataLoad();
-    public native int doDataSwap();
     public native int doDataRefresh();
     public native int doDataTime(int Time);
     public native int doCPUUpdate(int Update);

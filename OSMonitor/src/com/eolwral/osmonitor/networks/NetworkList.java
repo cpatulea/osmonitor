@@ -182,7 +182,6 @@ public class NetworkList extends MapActivity implements OnGestureListener, OnTou
 	        
 			if(JNILibrary.doDataLoad() == 1)
 			{
-		    	JNILibrary.doDataSwap();
 		    	UpdateInterface.notifyDataSetChanged();
 		    	
 				if(EmptyMsg != null)

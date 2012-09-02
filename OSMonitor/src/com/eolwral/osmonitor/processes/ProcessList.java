@@ -216,7 +216,6 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 						+ JNILibrary.GetMemCached()
 						+ JNILibrary.GetMemFree()) + "K");
 
-				JNILibrary.doDataSwap();
 				ProcStat.Update();
 				ProcSnapshot = ProcList.Collect();
 				UpdateInterface.notifyDataSetChanged();

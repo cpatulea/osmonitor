@@ -275,11 +275,6 @@ static jint Toggle_Start(JNIEnv* env, jobject thiz, jint type)
 	return 1;
 }
 
-static jint Toggle_Ready(JNIEnv* env, jobject thiz)
-{
-	return data_refresh;
-}
-
 static jint Toggle_Load(JNIEnv* env, jobject thiz)
 {
 	if(data_refresh == 0)
@@ -1066,7 +1061,6 @@ static JNINativeMethod gMethods[] = {
 		{ "doTaskStop", "()I", Toggle_Stop},
 		{ "doTaskStart", "(I)I", Toggle_Start},
 		{ "doDataLoad", "()I", Toggle_Load},
-		{ "doDataSwap", "()I", Toggle_Ready},
 		{ "doDataRefresh", "()I", Toggle_Refresh},
 		{ "doDataTime", "(I)I", Toggle_Time},
 		{ "doCPUUpdate", "(I)I", Toggle_CPU},

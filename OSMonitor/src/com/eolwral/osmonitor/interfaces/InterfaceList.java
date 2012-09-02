@@ -137,7 +137,6 @@ public class InterfaceList extends Activity implements OnGestureListener, OnTouc
 		public void run() {
 
 			if(JNILibrary.doDataLoad() == 1) {
-		    	JNILibrary.doDataSwap();
 		    	UpdateInterface.invalidateViews();
 			}
 			
