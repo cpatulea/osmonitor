@@ -17,11 +17,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.webkit.WebView;
 import android.widget.ListView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -54,6 +56,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 	// JNILibrary Interface
 	private JNIInterface JNILibrary = JNIInterface.getInstance();
 	private ProcStat ProcStat;
+	private ProcCollectionTask ProcCollection;
 	private ProcList ProcSnapshot;
 
 	// ProcessInfoQuery Object 
@@ -191,9 +194,25 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 		}
 	}
 
+	private class ProcCollectionTask extends AsyncTask<Void, Void, ProcList> {
+		@Override
+		protected ProcList doInBackground(Void... v) {
+			long start = System.currentTimeMillis();
+			ProcList snapshot = ProcList.Collect();
+			long end = System.currentTimeMillis();
+			Log.i("processlist", "took " + (end - start) + " ms to collect process list");
+			return snapshot;
+		}
+
+		@Override
+		protected void onPostExecute(ProcList snapshot) {
+			ProcessList.this.ProcSnapshot = snapshot;
+			UpdateInterface.notifyDataSetChanged();
+		}
+	}
+
 	private Runnable uiRunnable = new Runnable() {
 		public void run() {
-
 			if (JNILibrary.doDataLoad() == 1) {
 				//Multiply the overall CPU usage if we are on the LP cluster
 				int cpuLoad = ProcStat.GetCPUUsageValue();
@@ -217,8 +236,12 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
 						+ JNILibrary.GetMemFree()) + "K");
 
 				ProcStat.Update();
-				ProcSnapshot = ProcList.Collect();
-				UpdateInterface.notifyDataSetChanged();
+				if (ProcCollection.getStatus() == AsyncTask.Status.RUNNING) {
+					Log.w("processlist", "process list refresh running too long");
+				} else {
+					ProcCollection = new ProcCollectionTask();
+					ProcCollection.execute();
+				}
 			}
 			else
 			{
@@ -251,6 +274,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
         super.onCreate(savedInstanceState);
         
         ProcStat = new ProcStat();
+        ProcCollection = new ProcCollectionTask();
         ProcSnapshot = ProcList.Empty();
 
         // Use a custom layout file
@@ -549,6 +573,7 @@ public class ProcessList extends ListActivity implements OnGestureListener, OnTo
     public void onPause() 
     {
     	uiHandler.removeCallbacks(uiRunnable);
+    	ProcCollection.cancel(true);
     	JNILibrary.doTaskStop();
     	
     	if(MultiSelect.isChecked())
